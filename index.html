@@ -1092,6 +1092,7 @@
         let currentSport = 'Basketball'; 
         let selectedDate = ''; 
         let selectedSlotsArray = [];
+        let pendingBookingPayload = null; // Stores booking temporarily until WhatsApp click
 
         async function smartDbAction(action, payload = null) {
             const isOffline = GOOGLE_SCRIPT_URL.includes('YOUR_GOOGLE');
@@ -1321,7 +1322,7 @@
             priceContainer.innerHTML = `₹${tot}`;
         }
 
-        // ---------- WITH UPI PAYMENT LOGIC & WARNING MESSAGE ----------
+        // ---------- WITH DELAYED UPI PAYMENT LOGIC & WARNING MESSAGE ----------
         async function submitBooking(e) {
             e.preventDefault();
             if (selectedSlotsArray.length === 0) return alert('Please select at least one hourly slot to book.');
@@ -1338,7 +1339,8 @@
             const combinedTimes = selectedSlotsArray.map(s => s.time).join(', ');
             const totalAmt = selectedSlotsArray.reduce((acc, curr) => acc + curr.price, 0);
 
-            const payload = { 
+            // STORE GLOBALLY, BUT DO NOT SEND TO DATABASE YET
+            pendingBookingPayload = { 
                 type: 'booking', 
                 name: document.getElementById('bookName').value, 
                 phone: document.getElementById('bookPhone').value, 
@@ -1349,16 +1351,13 @@
                 source: 'Website' 
             };
 
-            // Send to DB
-            await smartDbAction('addBooking', payload);
-
             // Generate UPI URL
             const upiString = `upi://pay?pa=${merchantUpiId}&pn=${encodeURIComponent(merchantName)}&am=${totalAmt}&cu=INR&tn=Turf Booking ${selectedDate}`;
 
             // Generate QR Code Image URL (Using a free, safe QR generator API)
             const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}`;
 
-            // Create a Payment Modal on the fly (With the Warning Message requested)
+            // Create a Payment Modal on the fly
             const paymentModal = document.createElement('div');
             paymentModal.id = "upiPaymentModal";
             paymentModal.className = "fixed inset-0 bg-navy/90 z-[9999] flex justify-center items-center backdrop-blur-sm p-4";
@@ -1382,7 +1381,7 @@
                         </a>
                     </div>
 
-                    <!-- WARNING MESSAGE ADDED HERE -->
+                    <!-- WARNING MESSAGE -->
                     <div class="bg-red-50 border-2 border-red-200 rounded-xl p-4 mb-4 md:mb-6 text-left shadow-sm">
                         <p class="text-xs md:text-sm text-red-600 font-bold leading-relaxed">
                             <i class="fa-solid fa-circle-exclamation mr-1 text-red-500"></i>
@@ -1390,7 +1389,8 @@
                         </p>
                     </div>
                     
-                    <button onclick="confirmWhatsApp('${payload.name}', '${payload.sport}', '${payload.date}', '${payload.timeSlot}', ${totalAmt})" class="w-full bg-[#25D366] text-white py-3 md:py-4 rounded-xl font-black text-base hover:bg-[#1ebe5d] transition shadow-xl flex justify-center items-center gap-3 mt-auto">
+                    <!-- Confirmation Button that triggers Database addition -->
+                    <button onclick="confirmWhatsApp()" class="w-full bg-[#25D366] text-white py-3 md:py-4 rounded-xl font-black text-base hover:bg-[#1ebe5d] transition shadow-xl flex justify-center items-center gap-3 mt-auto">
                         <i class="fa-brands fa-whatsapp text-xl md:text-2xl"></i> I Paid, Send Screenshot
                     </button>
                 </div>
@@ -1398,16 +1398,28 @@
 
             document.body.appendChild(paymentModal);
 
-            document.getElementById('bookingForm').reset(); 
+            // Revert button state (Form remains unreset until they click the whatsapp button)
             btn.innerHTML = orig; 
             btn.disabled = false; 
-            generateSlots();
         }
 
-        function confirmWhatsApp(name, sport, date, time, amt) {
-            const waMsg = `*Payment Done! Confirm My Slot* ✅%0A%0A*Name:* ${name}%0A*Sport:* ${sport}%0A*Date:* ${date}%0A*Time:* ${time}%0A*Amount:* ₹${amt}%0A%0A[Please attach your payment screenshot here]`;
+        async function confirmWhatsApp() {
+            if (!pendingBookingPayload) return;
+
+            // 1. Send to Database NOW (Because they clicked the verify button)
+            await smartDbAction('addBooking', pendingBookingPayload);
+
+            // 2. Open WhatsApp
+            const waMsg = `*Payment Done! Confirm My Slot* ✅%0A%0A*Name:* ${pendingBookingPayload.name}%0A*Sport:* ${pendingBookingPayload.sport}%0A*Date:* ${pendingBookingPayload.date}%0A*Time:* ${pendingBookingPayload.timeSlot}%0A*Amount:* ₹${pendingBookingPayload.price}%0A%0A[Please attach your payment screenshot here]`;
             window.open(`https://wa.me/919156194847?text=${waMsg}`, '_blank');
+            
+            // 3. Cleanup UI (Remove Modal, Reset Form, Block the slot visually)
             document.getElementById('upiPaymentModal').remove();
+            document.getElementById('bookingForm').reset();
+            generateSlots(); // Refreshes and greys out the newly booked slots
+            
+            // Clear Payload
+            pendingBookingPayload = null;
         }
 
         // ----------------------------------------------------
