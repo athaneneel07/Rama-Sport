@@ -1361,10 +1361,14 @@
         async function submitBooking(e) {
             e.preventDefault();
             if (selectedSlotsArray.length === 0) return alert('Please select at least one hourly slot to book.');
-            
+
+            // YOUR BUSINESS UPI ID HERE (e.g., yourname@okicici, 9999999999@ybl)
+            const merchantUpiId = "9422231321@fam"; 
+            const merchantName = "Rama Sports";
+
             const btn = document.getElementById('submitBtn'); 
             const orig = btn.innerHTML; 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing Payment/Block...`; 
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Generating Payment...`; 
             btn.disabled = true;
 
             const combinedTimes = selectedSlotsArray.map(s => s.time).join(', ');
@@ -1380,19 +1384,61 @@
                 price: totalAmt, 
                 source: 'Website' 
             };
-            
+
             // Send to DB
             await smartDbAction('addBooking', payload);
-            
-            alert(`✅ Booking Requested for ${selectedSlotsArray.length} hours!\nTotal Price: ₹${totalAmt}\n\nYou will now be redirected to WhatsApp to confirm your slot with us.`);
-            
-            const waMsg = `*New Booking Request!* ⚡%0A%0A*Name:* ${payload.name}%0A*Phone:* ${payload.phone}%0A*Sport:* ${payload.sport}%0A*Date:* ${payload.date}%0A*Time:* ${payload.timeSlot}%0A*Total:* ₹${payload.price}%0A%0APlease confirm my slot!`;
-            window.open(`https://wa.me/919156194847?text=${waMsg}`, '_blank');
-            
+
+            // Generate UPI URL
+            // Format: upi://pay?pa=UPI_ID&pn=NAME&am=AMOUNT&cu=INR
+            const upiString = `upi://pay?pa=${merchantUpiId}&pn=${encodeURIComponent(merchantName)}&am=${totalAmt}&cu=INR&tn=Turf Booking ${selectedDate}`;
+
+            // Generate QR Code Image URL (Using a free, safe QR generator API)
+            const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}`;
+
+            // Create a Payment Modal on the fly
+            const paymentModal = document.createElement('div');
+            paymentModal.id = "upiPaymentModal";
+            paymentModal.className = "fixed inset-0 bg-navy/90 z-[9999] flex justify-center items-center backdrop-blur-sm p-4";
+            paymentModal.innerHTML = `
+                <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative border-t-8 border-orange">
+                    <button onclick="document.getElementById('upiPaymentModal').remove()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl"><i class="fa-solid fa-times"></i></button>
+                    <h2 class="text-3xl font-black text-navy mb-2">Complete Payment</h2>
+                    <p class="text-gray-500 font-bold mb-6">Total Amount: <span class="text-orange text-xl">₹${totalAmt}</span></p>
+                    
+                    <!-- Desktop: Scan QR -->
+                    <div class="hidden md:block mb-6">
+                        <p class="text-sm font-bold text-navy mb-3 uppercase tracking-widest">Scan to Pay via any UPI App</p>
+                        <img src="${qrImageUrl}" alt="UPI QR Code" class="mx-auto border-4 border-gray-100 rounded-xl shadow-sm">
+                    </div>
+
+                    <!-- Mobile: Direct App Open -->
+                    <div class="block md:hidden mb-6">
+                        <a href="${upiString}" class="block w-full bg-navy text-white py-4 rounded-xl font-black text-lg hover:bg-orange transition shadow-xl flex justify-center items-center gap-3">
+                            <i class="fa-solid fa-mobile-screen"></i> Pay via GPay / PhonePe
+                        </a>
+                    </div>
+
+                    <p class="text-xs text-gray-400 mb-6 font-semibold">After payment, send us a screenshot on WhatsApp to confirm your slot.</p>
+                    
+                    <button onclick="confirmWhatsApp('${payload.name}', '${payload.sport}', '${payload.date}', '${payload.timeSlot}', ${totalAmt})" class="w-full bg-[#25D366] text-white py-4 rounded-xl font-black text-lg hover:bg-[#1ebe5d] transition shadow-xl flex justify-center items-center gap-3">
+                        <i class="fa-brands fa-whatsapp text-2xl"></i> I have paid, send Screenshot
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(paymentModal);
+
             document.getElementById('bookingForm').reset(); 
             btn.innerHTML = orig; 
             btn.disabled = false; 
-            generateSlots(); // visually refresh blocks 
+            generateSlots();
+        }
+
+        // Helper function for the WhatsApp button inside the payment modal
+        function confirmWhatsApp(name, sport, date, time, amt) {
+            const waMsg = `*Payment Done & Slot Booked!* ✅%0A%0A*Name:* ${name}%0A*Sport:* ${sport}%0A*Date:* ${date}%0A*Time:* ${time}%0A*Amount:* ₹${amt}%0A%0A[Please attach your payment screenshot here]`;
+            window.open(`https://wa.me/919156194847?text=${waMsg}`, '_blank');
+            document.getElementById('upiPaymentModal').remove();
         }
 
         // ----------------------------------------------------
