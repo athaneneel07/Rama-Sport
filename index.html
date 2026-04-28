@@ -40,7 +40,8 @@
             overflow-x: hidden; 
         }
         ::-webkit-scrollbar { 
-            width: 10px; 
+            width: 8px; 
+            height: 8px; /* For horizontal scrollbars */
         }
         ::-webkit-scrollbar-track { 
             background: #F4F4F4; 
@@ -81,11 +82,14 @@
         .hover-lift { 
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; 
         }
-        .hover-lift:hover { 
-            transform: translateY(-12px); 
-            box-shadow: 0 20px 40px rgba(10, 37, 64, 0.15); 
-            z-index: 10; 
+        @media (hover: hover) {
+            .hover-lift:hover { 
+                transform: translateY(-8px); 
+                box-shadow: 0 20px 40px rgba(10, 37, 64, 0.15); 
+                z-index: 10; 
+            }
         }
+        
         .orange-btn { 
             background: #ff6a00; 
             color: white; 
@@ -96,7 +100,7 @@
         }
         .orange-btn:hover { 
             background: #e65c00; 
-            transform: scale(1.05); 
+            transform: scale(1.03); 
             box-shadow: 0 8px 25px rgba(255, 106, 0, 0.6); 
         }
 
@@ -136,7 +140,7 @@
             opacity: 0.6; 
             pointer-events: none; 
             color: #9ca3af; 
-            text-decoration: line-through; /* This strikes out the text */
+            text-decoration: line-through; 
         }
         .slot-selected { 
             background: #0a2540; 
@@ -183,146 +187,135 @@
             
             <!-- Logo -->
             <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
-                <div class="w-12 h-12 bg-navy text-white rounded-full flex items-center justify-center font-bold text-2xl shadow-md">
+                <div class="w-10 h-10 md:w-12 md:h-12 bg-navy text-white rounded-full flex items-center justify-center font-bold text-xl md:text-2xl shadow-md">
                     <i class="fa-solid fa-bolt text-orange"></i>
                 </div>
-                <span class="font-black text-2xl text-navy uppercase tracking-wider">Rama Sports</span>
+                <span class="font-black text-xl md:text-2xl text-navy uppercase tracking-wider">Rama Sports</span>
             </div>
             
             <!-- Desktop Menu -->
-            <div class="hidden md:flex space-x-8 font-semibold text-navy">
+            <div class="hidden md:flex space-x-8 font-semibold text-navy items-center">
                 <a href="#about" class="hover:text-orange transition">About Us</a>
                 <a href="#booking" class="hover:text-orange transition">Bookings</a>
                 <a href="#academy" class="hover:text-orange transition">Academy</a>
                 <a href="#gallery" class="hover:text-orange transition">Gallery</a>
-                <a href="#rules" class="hover:text-orange transition">Policies</a>
                 <a href="#contact" class="hover:text-orange transition">Contact</a>
+                <!-- CTA Button -->
+                <a href="#booking" class="orange-btn px-6 py-2 md:px-8 md:py-3 rounded-full font-bold shadow-lg">
+                    Book a Slot
+                </a>
             </div>
-            
-            <!-- CTA Button -->
-            <a href="#booking" class="hidden md:block orange-btn px-8 py-3 rounded-full font-bold shadow-lg">
-                Book a Slot
-            </a>
-            
+
+            <!-- Mobile Menu Toggle -->
+            <button id="mobileMenuBtn" class="md:hidden text-navy text-2xl focus:outline-none" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white shadow-xl flex flex-col font-bold text-navy py-4 absolute w-full border-t border-gray-100">
+            <a href="#about" class="px-6 py-3 hover:bg-gray-50 transition border-b border-gray-100" onclick="toggleMobileMenu()">About Us</a>
+            <a href="#booking" class="px-6 py-3 hover:bg-gray-50 transition border-b border-gray-100" onclick="toggleMobileMenu()">Bookings</a>
+            <a href="#academy" class="px-6 py-3 hover:bg-gray-50 transition border-b border-gray-100" onclick="toggleMobileMenu()">Academy</a>
+            <a href="#gallery" class="px-6 py-3 hover:bg-gray-50 transition border-b border-gray-100" onclick="toggleMobileMenu()">Gallery</a>
+            <a href="#contact" class="px-6 py-3 hover:bg-gray-50 transition border-b border-gray-100" onclick="toggleMobileMenu()">Contact</a>
+            <div class="px-6 py-4">
+                <a href="#booking" class="block text-center orange-btn px-6 py-3 rounded-full font-bold shadow-lg" onclick="toggleMobileMenu()">
+                    Book a Slot
+                </a>
+            </div>
         </div>
     </nav>
 
     <!-- 1. Hero Section (Parallax & Quick Book) -->
-    <section class="relative h-screen flex items-center justify-center parallax-hero">
+    <section class="relative h-[90vh] md:h-screen flex items-center justify-center parallax-hero">
         <div class="absolute inset-0 bg-navy/60"></div>
-        <div class="relative z-10 text-center px-4 max-w-5xl gs-reveal">
+        <div class="relative z-10 text-center px-4 max-w-5xl gs-reveal mt-16 md:mt-0">
             
-            <div class="inline-block bg-orange text-white px-5 py-2 rounded-full text-sm font-bold mb-6 tracking-widest shadow-lg uppercase">
+            <div class="inline-block bg-orange text-white px-4 py-2 rounded-full text-xs md:text-sm font-bold mb-4 md:mb-6 tracking-widest shadow-lg uppercase">
                 Premium Quality Turf in Pune
             </div>
             
-            <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight drop-shadow-xl">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-4 md:mb-6 leading-tight drop-shadow-xl">
                 The City’s Best Turf.<br>
                 <span class="text-orange">Your Best Game.</span>
             </h1>
             
-            <p class="text-lg md:text-2xl text-gray-200 mb-12 font-light">
+            <p class="text-base md:text-xl lg:text-2xl text-gray-200 mb-8 md:mb-12 font-light px-2">
                 Experience Professional Grade FIFA-Approved surfaces, High-Lumen LED lighting, and effortless booking.
             </p>
             
             <!-- Quick Book Bar -->
-            <div class="bg-white p-4 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-4 items-center max-w-4xl mx-auto">
-                <select id="heroSport" class="w-full md:w-1/3 p-4 bg-gray-50 border border-gray-200 rounded-xl text-navy focus:outline-none focus:border-orange font-bold text-lg">
+            <div class="bg-white p-3 md:p-4 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-3 md:gap-4 items-center max-w-4xl mx-auto w-[95%]">
+                <select id="heroSport" class="w-full md:w-1/3 p-3 md:p-4 bg-gray-50 border border-gray-200 rounded-xl text-navy focus:outline-none focus:border-orange font-bold text-base md:text-lg">
                     <option value="Basketball">Basketball</option>
                     <option value="Pickle Ball">Pickle Ball</option>
                     <option value="Box Cricket Turf">Box Cricket Turf</option>
                 </select>
-                <input type="date" id="heroDate" class="w-full md:w-1/3 p-4 bg-gray-50 border border-gray-200 rounded-xl text-navy focus:outline-none focus:border-orange font-bold text-lg">
-                <button onclick="scrollToBook()" class="w-full md:w-1/3 orange-btn p-4 rounded-xl font-black text-center text-lg shadow-md flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-magnifying-glass"></i> Check Availability
+                <input type="date" id="heroDate" class="w-full md:w-1/3 p-3 md:p-4 bg-gray-50 border border-gray-200 rounded-xl text-navy focus:outline-none focus:border-orange font-bold text-base md:text-lg">
+                <button onclick="scrollToBook()" class="w-full md:w-1/3 orange-btn p-3 md:p-4 rounded-xl font-black text-center text-base md:text-lg shadow-md flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass"></i> <span class="md:hidden lg:inline">Check Availability</span><span class="hidden md:inline lg:hidden">Check</span>
                 </button>
             </div>
 
             <!-- Trust Icons -->
-            <div class="flex flex-wrap justify-center gap-8 mt-16 text-white/90 text-sm md:text-base font-semibold gs-reveal delay-300">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-star text-orange text-xl"></i> 4.8/5 Rating on Google
+            <div class="flex flex-col md:flex-row flex-wrap justify-center gap-4 md:gap-8 mt-10 md:mt-16 text-white/90 text-sm md:text-base font-semibold gs-reveal delay-300">
+                <div class="flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-star text-orange text-lg md:text-xl"></i> 4.8/5 Rating on Google
                 </div>
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-futbol text-orange text-xl"></i> Professional Grade Turf
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-lock text-orange text-xl"></i> Locker Rooms Available
+                <div class="flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-futbol text-orange text-lg md:text-xl"></i> Professional Grade Turf
                 </div>
             </div>
         </div>
     </section>
 
     <!-- 2. About Us Section -->
-    <section id="about" class="py-24 bg-primary relative overflow-hidden">
+    <section id="about" class="py-16 md:py-24 bg-primary relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-2 gap-16 items-center">
+            <div class="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
                 
                 <!-- Image Storytelling -->
                 <div class="relative gs-slide-left z-10">
-                    <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1000&auto=format&fit=crop" alt="Turf" class="rounded-3xl shadow-2xl border-l-8 border-orange hover-lift object-cover h-[600px] w-full">
+                    <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1000&auto=format&fit=crop" alt="Turf" class="rounded-3xl shadow-2xl border-l-8 border-orange hover-lift object-cover h-[350px] md:h-[600px] w-full">
                     
                     <!-- Stats Overlays -->
-                    <div class="absolute -bottom-8 -right-8 bg-navy text-white p-8 rounded-2xl shadow-2xl hidden md:block border-b-4 border-orange hover-lift">
-                        <p class="text-5xl font-black text-white mb-1">5,000+</p>
-                        <p class="text-sm font-bold uppercase tracking-widest text-orange">Matches Played</p>
-                    </div>
-                    <div class="absolute top-8 -left-8 bg-white text-navy p-6 rounded-2xl shadow-2xl hidden md:block border-l-4 border-teal hover-lift">
-                        <p class="text-3xl font-black text-navy mb-1">10,000+</p>
-                        <p class="text-xs font-bold uppercase tracking-widest text-teal">Goals Scored</p>
+                    <div class="absolute -bottom-6 -right-4 md:-bottom-8 md:-right-8 bg-navy text-white p-4 md:p-8 rounded-2xl shadow-2xl border-b-4 border-orange hover-lift">
+                        <p class="text-3xl md:text-5xl font-black text-white mb-1">5,000+</p>
+                        <p class="text-[10px] md:text-sm font-bold uppercase tracking-widest text-orange">Matches Played</p>
                     </div>
                 </div>
 
                 <!-- Text & Specs -->
                 <div class="gs-slide-right z-10">
-                    <h2 class="text-4xl md:text-5xl font-black text-navy mb-6">
+                    <h2 class="text-3xl md:text-5xl font-black text-navy mb-4 md:mb-6 leading-tight">
                         Built by Athletes,<br>
                         <span class="text-orange">For Athletes.</span>
                     </h2>
                     
-                    <p class="text-gray-600 mb-8 leading-relaxed text-lg">
+                    <p class="text-gray-600 mb-8 leading-relaxed text-base md:text-lg">
                         Proudly serving the Kothrud, Pune community. Whether you are a weekend warrior or training for the pros, Rama Sports provides a flawless, high-energy environment where the game never stops. Our mission is to provide a professional-grade playing experience for every player.
                     </p>
                     
                     <!-- Quick Facts Icons -->
-                    <div class="grid grid-cols-2 gap-8">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
                         <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-full bg-orange/10 flex items-center justify-center text-orange text-2xl shrink-0 shadow-inner">
+                            <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-orange/10 flex items-center justify-center text-orange text-xl md:text-2xl shrink-0 shadow-inner">
                                 <i class="fa-solid fa-lightbulb"></i>
                             </div>
                             <div>
-                                <h4 class="font-black text-navy text-lg">The Lighting</h4>
-                                <p class="text-sm text-gray-500">High-Lumen LED Floodlights for a daylight experience at night.</p>
+                                <h4 class="font-black text-navy text-base md:text-lg">The Lighting</h4>
+                                <p class="text-xs md:text-sm text-gray-500">High-Lumen LED Floodlights for a daylight experience at night.</p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-full bg-orange/10 flex items-center justify-center text-orange text-2xl shrink-0 shadow-inner">
+                            <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-orange/10 flex items-center justify-center text-orange text-xl md:text-2xl shrink-0 shadow-inner">
                                 <i class="fa-solid fa-seedling"></i>
                             </div>
                             <div>
-                                <h4 class="font-black text-navy text-lg">The Turf</h4>
-                                <p class="text-sm text-gray-500">50mm Monofilament Grass. Premium cushioning for joint protection.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-full bg-orange/10 flex items-center justify-center text-orange text-2xl shrink-0 shadow-inner">
-                                <i class="fa-solid fa-shower"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-black text-navy text-lg">Amenities</h4>
-                                <p class="text-sm text-gray-500">Clean changing rooms, restrooms, and resting dugouts.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-full bg-orange/10 flex items-center justify-center text-orange text-2xl shrink-0 shadow-inner">
-                                <i class="fa-solid fa-bottle-water"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-black text-navy text-lg">Hydration</h4>
-                                <p class="text-sm text-gray-500">Chilled RO drinking water available for all players.</p>
+                                <h4 class="font-black text-navy text-base md:text-lg">The Turf</h4>
+                                <p class="text-xs md:text-sm text-gray-500">50mm Monofilament Grass. Premium cushioning for joint protection.</p>
                             </div>
                         </div>
                     </div>
@@ -332,58 +325,58 @@
     </section>
 
     <!-- 3. Booking Engine -->
-    <section id="booking" class="py-24 bg-white relative z-20 border-t border-gray-200">
+    <section id="booking" class="py-16 md:py-24 bg-white relative z-20 border-t border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <div class="text-center mb-16 gs-reveal">
-                <h2 class="text-4xl md:text-5xl font-black text-navy mb-4">Book Your Slot. Own the Field.</h2>
-                <p class="text-gray-500 font-semibold mb-8 text-lg">Want to play longer? You can select multiple 1-hour slots!</p>
+            <div class="text-center mb-10 md:mb-16 gs-reveal">
+                <h2 class="text-3xl md:text-5xl font-black text-navy mb-3 md:mb-4">Book Your Slot. Own the Field.</h2>
+                <p class="text-gray-500 font-semibold mb-6 md:mb-8 text-sm md:text-lg">Want to play longer? You can select multiple 1-hour slots!</p>
                 
                 <!-- Progress Bar -->
-                <div class="flex justify-center items-center gap-4 max-w-2xl mx-auto">
-                    <span class="font-black text-orange text-lg">Step 1: Select Date & Time</span>
-                    <div class="h-2 flex-1 bg-orange rounded-full shadow-inner"></div>
-                    <span class="font-bold text-navy text-lg">Step 2: Player Details</span>
-                    <div class="h-2 flex-1 bg-gray-200 rounded-full shadow-inner"></div>
-                    <span class="font-bold text-gray-400 text-lg">Step 3: Payment</span>
+                <div class="flex justify-center items-center gap-2 md:gap-4 max-w-2xl mx-auto text-xs md:text-lg">
+                    <span class="font-black text-orange">Step 1: Time</span>
+                    <div class="h-1 md:h-2 flex-1 bg-orange rounded-full shadow-inner"></div>
+                    <span class="font-bold text-navy">Step 2: Info</span>
+                    <div class="h-1 md:h-2 flex-1 bg-gray-200 rounded-full shadow-inner"></div>
+                    <span class="font-bold text-gray-400">Step 3: Pay</span>
                 </div>
             </div>
 
-            <div class="flex flex-col lg:flex-row gap-12">
+            <div class="flex flex-col lg:flex-row gap-8 md:gap-12">
                 
                 <!-- Left: Booking Grid -->
-                <div class="w-full lg:w-2/3 bg-primary p-8 md:p-10 rounded-3xl shadow-2xl gs-slide-up border border-gray-200">
+                <div class="w-full lg:w-2/3 bg-primary p-4 md:p-10 rounded-[2rem] shadow-2xl gs-slide-up border border-gray-200">
                     
                     <!-- Sport Tabs -->
-                    <div class="flex gap-4 mb-10 overflow-x-auto pb-4 custom-scrollbar">
-                        <button id="btn-Basketball" onclick="setSport('Basketball')" class="sport-tab flex-1 min-w-[150px] bg-navy text-white py-4 rounded-xl font-black text-lg border-2 border-navy transition shadow-lg">
+                    <div class="flex gap-3 md:gap-4 mb-6 md:mb-10 overflow-x-auto pb-4 custom-scrollbar">
+                        <button id="btn-Basketball" onclick="setSport('Basketball')" class="sport-tab flex-1 min-w-[130px] md:min-w-[150px] bg-navy text-white py-3 md:py-4 rounded-xl font-black text-sm md:text-lg border-2 border-navy transition shadow-lg shrink-0">
                             <i class="fa-solid fa-basketball mr-2 text-orange"></i> Basketball
                         </button>
-                        <button id="btn-Pickle Ball" onclick="setSport('Pickle Ball')" class="sport-tab flex-1 min-w-[150px] bg-white text-navy py-4 rounded-xl font-black text-lg border-2 border-gray-200 hover:border-orange transition">
+                        <button id="btn-Pickle Ball" onclick="setSport('Pickle Ball')" class="sport-tab flex-1 min-w-[130px] md:min-w-[150px] bg-white text-navy py-3 md:py-4 rounded-xl font-black text-sm md:text-lg border-2 border-gray-200 hover:border-orange transition shrink-0">
                             <i class="fa-solid fa-table-tennis-paddle-ball mr-2 text-orange"></i> Pickle Ball
                         </button>
-                        <button id="btn-Box Cricket Turf" onclick="setSport('Box Cricket Turf')" class="sport-tab flex-1 min-w-[150px] bg-white text-navy py-4 rounded-xl font-black text-lg border-2 border-gray-200 hover:border-orange transition">
-                            <i class="fa-solid fa-baseball-bat-ball mr-2 text-orange"></i> Cricket Turf
+                        <button id="btn-Box Cricket Turf" onclick="setSport('Box Cricket Turf')" class="sport-tab flex-1 min-w-[130px] md:min-w-[150px] bg-white text-navy py-3 md:py-4 rounded-xl font-black text-sm md:text-lg border-2 border-gray-200 hover:border-orange transition shrink-0">
+                            <i class="fa-solid fa-baseball-bat-ball mr-2 text-orange"></i> Cricket
                         </button>
                     </div>
 
                     <!-- Date Picker -->
-                    <div class="mb-10">
-                        <label class="block text-navy font-black mb-3 text-xl"><i class="fa-solid fa-calendar-days text-orange mr-2"></i> Select Date</label>
-                        <input type="date" id="bookDate" class="w-full p-5 rounded-xl border-2 border-gray-300 focus:outline-none focus:border-orange font-bold text-navy text-lg bg-white shadow-sm transition" onchange="generateSlots()">
+                    <div class="mb-6 md:mb-10">
+                        <label class="block text-navy font-black mb-2 md:mb-3 text-lg md:text-xl"><i class="fa-solid fa-calendar-days text-orange mr-2"></i> Select Date</label>
+                        <input type="date" id="bookDate" class="w-full p-4 md:p-5 rounded-xl border-2 border-gray-300 focus:outline-none focus:border-orange font-bold text-navy text-base md:text-lg bg-white shadow-sm transition" onchange="generateSlots()">
                     </div>
 
                     <!-- 1-Hour Slots Container -->
                     <div>
-                        <label class="block text-navy font-black mb-4 flex justify-between items-center text-xl">
-                            <span><i class="fa-solid fa-clock text-orange mr-2"></i> Available 1-Hour Slots</span>
-                            <span class="text-sm font-bold text-gray-500 bg-gray-200 px-3 py-1 rounded-full"><i class="fa-solid fa-square text-gray-400"></i> Gray = Booked</span>
+                        <label class="block text-navy font-black mb-4 flex flex-col md:flex-row md:justify-between md:items-center text-lg md:text-xl gap-2">
+                            <span><i class="fa-solid fa-clock text-orange mr-2"></i> Available Slots</span>
+                            <span class="text-xs md:text-sm font-bold text-gray-500 bg-gray-200 px-3 py-1 rounded-full w-max"><i class="fa-solid fa-square text-gray-400"></i> Gray = Booked</span>
                         </label>
                         
-                        <div id="slotContainer" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            <div class="col-span-full text-center text-gray-500 bg-white p-8 rounded-xl border-2 border-dashed border-gray-300">
-                                <i class="fa-solid fa-calendar-check text-4xl mb-3 text-gray-300"></i><br>
-                                Please select a date above to view available time slots.
+                        <div id="slotContainer" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                            <div class="col-span-full text-center text-gray-500 bg-white p-6 md:p-8 rounded-xl border-2 border-dashed border-gray-300">
+                                <i class="fa-solid fa-calendar-check text-3xl md:text-4xl mb-3 text-gray-300"></i><br>
+                                <span class="text-sm md:text-base">Please select a date above to view available time slots.</span>
                             </div>
                         </div>
                     </div>
@@ -391,29 +384,29 @@
 
                 <!-- Right: Sticky Summary Card -->
                 <div class="w-full lg:w-1/3">
-                    <div class="sticky top-28 bg-[#f8fbff] border-2 border-[#e1eaf5] p-8 md:p-10 rounded-3xl shadow-2xl gs-slide-left">
-                        <h3 class="text-3xl font-black text-navy border-b-2 border-gray-200 pb-4 mb-8">Booking Summary</h3>
+                    <div class="sticky top-24 bg-[#f8fbff] border-2 border-[#e1eaf5] p-6 md:p-10 rounded-[2rem] shadow-2xl gs-slide-left">
+                        <h3 class="text-2xl md:text-3xl font-black text-navy border-b-2 border-gray-200 pb-3 md:pb-4 mb-6 md:mb-8">Booking Summary</h3>
                         
-                        <div class="flex items-center gap-5 mb-8">
-                            <div class="w-20 h-20 rounded-2xl bg-white border border-gray-200 shadow-md flex items-center justify-center text-orange text-4xl">
+                        <div class="flex items-center gap-4 mb-6 md:mb-8">
+                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white border border-gray-200 shadow-md flex items-center justify-center text-orange text-2xl md:text-4xl shrink-0">
                                 <i class="fa-solid fa-location-dot"></i>
                             </div>
                             <div>
-                                <p id="sumSport" class="font-black text-navy text-xl mb-1">Basketball</p>
-                                <p class="text-sm text-gray-500 font-bold">Rama Sports, Kothrud</p>
+                                <p id="sumSport" class="font-black text-navy text-lg md:text-xl mb-1">Basketball</p>
+                                <p class="text-xs md:text-sm text-gray-500 font-bold">Rama Sports, Kothrud</p>
                             </div>
                         </div>
 
-                        <div class="space-y-4 text-base font-bold text-navy mb-10">
+                        <div class="space-y-4 text-sm md:text-base font-bold text-navy mb-8 md:mb-10">
                             <div class="flex justify-between border-b border-gray-200 pb-3">
                                 <span>Date:</span> 
-                                <span id="sumDate" class="text-orange">Not selected</span>
+                                <span id="sumDate" class="text-orange text-right">Not selected</span>
                             </div>
                             <div class="flex flex-col border-b border-gray-200 pb-3">
                                 <span class="mb-2">Selected Hours:</span>
-                                <span id="sumTime" class="text-orange text-sm space-y-2 block max-h-32 overflow-y-auto">None</span>
+                                <span id="sumTime" class="text-orange text-xs md:text-sm space-y-2 block max-h-32 overflow-y-auto pr-2 custom-scrollbar">None</span>
                             </div>
-                            <div class="flex justify-between text-2xl pt-2 mt-2">
+                            <div class="flex justify-between text-xl md:text-2xl pt-2 mt-2">
                                 <span>Total Price:</span> 
                                 <span id="sumPrice" class="text-orange font-black">₹0</span>
                             </div>
@@ -423,20 +416,20 @@
                         <form id="bookingForm" onsubmit="submitBooking(event)">
                             <div class="relative mb-4">
                                 <i class="fa-solid fa-user absolute left-4 top-4 text-gray-400"></i>
-                                <input type="text" id="bookName" placeholder="Your Full Name" class="w-full pl-12 p-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange font-bold transition" required>
+                                <input type="text" id="bookName" placeholder="Your Full Name" class="w-full pl-12 p-3 md:p-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange font-bold transition text-sm md:text-base" required>
                             </div>
                             
-                            <div class="relative mb-8">
+                            <div class="relative mb-6 md:mb-8">
                                 <i class="fa-solid fa-phone absolute left-4 top-4 text-gray-400"></i>
-                                <input type="tel" id="bookPhone" placeholder="Phone Number" class="w-full pl-12 p-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange font-bold transition" required>
+                                <input type="tel" id="bookPhone" placeholder="Phone Number" class="w-full pl-12 p-3 md:p-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange font-bold transition text-sm md:text-base" required>
                             </div>
 
-                            <button type="submit" id="submitBtn" class="w-full orange-btn py-5 rounded-xl font-black text-xl shadow-xl flex justify-center items-center gap-3">
+                            <button type="submit" id="submitBtn" class="w-full orange-btn py-4 md:py-5 rounded-xl font-black text-lg md:text-xl shadow-xl flex justify-center items-center gap-3">
                                 <i class="fa-solid fa-lock"></i> Secure My Slot
                             </button>
                         </form>
                         
-                        <p class="text-xs text-center text-gray-500 mt-6 font-semibold">
+                        <p class="text-[10px] md:text-xs text-center text-gray-500 mt-4 md:mt-6 font-semibold">
                             By booking, you agree to our <a href="#rules" class="text-orange underline">Cancellation Policy</a>.
                         </p>
                     </div>
@@ -445,40 +438,40 @@
         </div>
     </section>
 
-    <!-- 4. Tournaments & Academy (Dynamic from DB) -->
-    <section id="academy" class="py-24 parallax-tourney relative overflow-hidden">
+    <!-- 4. Tournaments & Academy -->
+    <section id="academy" class="py-16 md:py-24 parallax-tourney relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 relative z-10 text-white">
             
-            <div class="text-center mb-16 gs-reveal">
-                <h2 class="text-5xl font-black mb-4">Tournaments & Academy</h2>
-                <p class="text-xl text-gray-300 font-light">Compete for glory, or learn from certified professionals.</p>
+            <div class="text-center mb-10 md:mb-16 gs-reveal">
+                <h2 class="text-4xl md:text-5xl font-black mb-3 md:mb-4">Tournaments & Academy</h2>
+                <p class="text-base md:text-xl text-gray-300 font-light">Compete for glory, or learn from certified professionals.</p>
             </div>
             
-            <div id="dynamic-tournaments" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div id="dynamic-tournaments" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 <!-- Data dynamically injected here from Smart DB -->
                 <div class="col-span-full text-center py-20">
-                    <i class="fa-solid fa-spinner fa-spin text-orange text-5xl"></i>
-                    <p class="mt-4 font-bold">Loading Live Events...</p>
+                    <i class="fa-solid fa-spinner fa-spin text-orange text-4xl md:text-5xl"></i>
+                    <p class="mt-4 font-bold text-sm md:text-base">Loading Live Events...</p>
                 </div>
             </div>
-            
-            <!-- Academy Details Section -->
-            <div class="mt-16 bg-navy/80 backdrop-blur-md border border-white/10 p-8 rounded-3xl shadow-2xl gs-slide-up">
-                <h3 class="text-3xl font-black text-white mb-6 border-b border-gray-700 pb-4">Rama Sports Academy Schedule</h3>
-                <div class="grid md:grid-cols-3 gap-8 text-gray-300 font-semibold">
+
+            <!-- ACADEMY DETAILS RESTORED HERE -->
+            <div class="mt-10 md:mt-16 bg-navy/80 backdrop-blur-md border border-white/10 p-6 md:p-8 rounded-3xl shadow-2xl gs-slide-up">
+                <h3 class="text-2xl md:text-3xl font-black text-white mb-4 md:mb-6 border-b border-gray-700 pb-3 md:pb-4">Rama Sports Academy Schedule</h3>
+                <div class="grid md:grid-cols-3 gap-6 md:gap-8 text-gray-300 font-semibold text-sm md:text-base">
                     <div>
-                        <h4 class="text-orange text-xl mb-2 font-bold"><i class="fa-solid fa-calendar-week mr-2"></i> Monday - Thursday</h4>
+                        <h4 class="text-orange text-lg md:text-xl mb-2 font-bold"><i class="fa-solid fa-calendar-week mr-2"></i> Monday - Thursday</h4>
                         <p>Morning: 06:00 AM – 07:00 AM</p>
                         <p>Evening: 03:30 PM – 10:00 PM</p>
                     </div>
                     <div>
-                        <h4 class="text-orange text-xl mb-2 font-bold"><i class="fa-solid fa-calendar-day mr-2"></i> Friday (Vesak Day)</h4>
+                        <h4 class="text-orange text-lg md:text-xl mb-2 font-bold"><i class="fa-solid fa-calendar-day mr-2"></i> Friday (Vesak Day)</h4>
                         <p>Morning: 06:00 AM – 07:00 AM</p>
                         <p>Evening: 03:00 PM – 10:00 PM</p>
-                        <p class="text-xs text-gray-400 mt-1">* Hours might differ on holidays</p>
+                        <p class="text-[10px] md:text-xs text-gray-400 mt-1">* Hours might differ on holidays</p>
                     </div>
                     <div>
-                        <h4 class="text-orange text-xl mb-2 font-bold"><i class="fa-solid fa-calendar-check mr-2"></i> Weekends (Sat - Sun)</h4>
+                        <h4 class="text-orange text-lg md:text-xl mb-2 font-bold"><i class="fa-solid fa-calendar-check mr-2"></i> Weekends (Sat - Sun)</h4>
                         <p>Full Day: 06:00 AM – 10:00 PM</p>
                     </div>
                 </div>
@@ -487,71 +480,70 @@
         </div>
     </section>
 
-    <!-- 5. Reviews Section (Masonry Grid & Scorecard) -->
-    <section class="py-24 bg-primary relative">
+    <!-- 5. Reviews Section -->
+    <section class="py-16 md:py-24 bg-primary relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Scorecard Header -->
-            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gs-reveal border-b-2 border-gray-200 pb-8">
-                <div>
-                    <h2 class="text-5xl font-black text-navy mb-6">Player Stories</h2>
-                    <div class="flex items-center gap-6">
-                        <div class="text-6xl font-black text-orange drop-shadow-md">4.8/5</div>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-16 gs-reveal border-b-2 border-gray-200 pb-6 md:pb-8">
+                <div class="mb-6 md:mb-0">
+                    <h2 class="text-4xl md:text-5xl font-black text-navy mb-4 md:mb-6">Player Stories</h2>
+                    <div class="flex items-center gap-4 md:gap-6">
+                        <div class="text-5xl md:text-6xl font-black text-orange drop-shadow-md">4.8/5</div>
                         <div>
-                            <div class="text-orange text-2xl mb-1">
+                            <div class="text-orange text-lg md:text-2xl mb-1">
                                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
                             </div>
-                            <p class="text-sm font-bold text-navy uppercase tracking-widest flex items-center">
-                                <i class="fa-brands fa-google mr-2 text-lg"></i> Verified Google Reviews
+                            <p class="text-xs md:text-sm font-bold text-navy uppercase tracking-widest flex items-center">
+                                <i class="fa-brands fa-google mr-2 text-base md:text-lg"></i> Verified Reviews
                             </p>
                         </div>
                     </div>
                 </div>
-                <a href="#" target="_blank" class="mt-8 md:mt-0 border-2 border-navy text-navy hover:bg-navy hover:text-white transition px-8 py-4 rounded-full font-black shadow-sm flex items-center">
+                <a href="#" target="_blank" class="w-full md:w-auto text-center border-2 border-navy text-navy hover:bg-navy hover:text-white transition px-6 py-3 md:px-8 md:py-4 rounded-full font-black shadow-sm flex items-center justify-center">
                     <i class="fa-solid fa-pen mr-2 text-orange"></i> Write a Review
                 </a>
             </div>
 
             <!-- Masonry Grid for visual reviews -->
-            <div class="grid md:grid-cols-3 gap-8">
-                
+            <div class="grid md:grid-cols-3 gap-6 md:gap-8">
                 <!-- Text Review 1 -->
-                <div class="bg-white p-8 rounded-3xl shadow-xl border-t-8 border-orange hover-lift gs-slide-up">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-14 h-14 rounded-full bg-navy flex items-center justify-center text-white font-black text-xl shadow-md">RD</div>
+                <div class="bg-white p-6 md:p-8 rounded-3xl shadow-xl border-t-8 border-orange hover-lift gs-slide-up">
+                    <div class="flex items-center gap-4 mb-4 md:mb-6">
+                        <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-navy flex items-center justify-center text-white font-black text-lg md:text-xl shadow-md shrink-0">RD</div>
                         <div>
-                            <h4 class="font-black text-navy text-lg">Rahul D.</h4>
-                            <p class="text-xs text-orange font-bold uppercase tracking-wider"><i class="fa-solid fa-medal mr-1"></i> Regular Cricketer</p>
+                            <h4 class="font-black text-navy text-base md:text-lg">Rahul D.</h4>
+                            <p class="text-[10px] md:text-xs text-orange font-bold uppercase tracking-wider"><i class="fa-solid fa-medal mr-1"></i> Regular Cricketer</p>
                         </div>
                     </div>
-                    <p class="text-gray-600 font-medium leading-relaxed">
+                    <p class="text-gray-600 font-medium leading-relaxed text-sm md:text-base">
                         "The lighting here is phenomenal. Playing Box Cricket at night feels exactly like a day match. The turf quality is gentle on the knees. Highly recommend!"
                     </p>
                 </div>
                 
                 <!-- Image Review -->
-                <div class="relative rounded-3xl overflow-hidden shadow-xl group hover-lift gs-slide-up delay-100 h-[300px] md:h-auto border-4 border-white">
+                <div class="relative rounded-3xl overflow-hidden shadow-xl group hover-lift gs-slide-up delay-100 h-[250px] md:h-auto border-4 border-white">
                     <img src="https://images.unsplash.com/photo-1526232761682-d26e03ac148e?q=80&w=600&auto=format&fit=crop" alt="Team" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-navy to-transparent opacity-90"></div>
-                    <div class="absolute bottom-6 left-6 text-white">
-                        <div class="text-orange text-lg mb-2 shadow-sm">
+                    <div class="absolute bottom-4 left-4 md:bottom-6 md:left-6 text-white">
+                        <div class="text-orange text-base md:text-lg mb-1 md:mb-2 shadow-sm">
                             <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                         </div>
-                        <p class="font-black text-lg">"Best turf in Kothrud!"</p>
-                        <p class="text-sm font-semibold text-gray-300">- Team Spartans</p>
+                        <p class="font-black text-base md:text-lg">"Best turf in Kothrud!"</p>
+                        <p class="text-xs md:text-sm font-semibold text-gray-300">- Team Spartans</p>
                     </div>
                 </div>
 
                 <!-- Text Review 2 -->
-                <div class="bg-white p-8 rounded-3xl shadow-xl border-t-8 border-navy hover-lift gs-slide-up delay-200">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center text-navy font-black text-xl shadow-md">AS</div>
+                <div class="bg-white p-6 md:p-8 rounded-3xl shadow-xl border-t-8 border-navy hover-lift gs-slide-up delay-200">
+                    <div class="flex items-center gap-4 mb-4 md:mb-6">
+                        <div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gray-200 flex items-center justify-center text-navy font-black text-lg md:text-xl shadow-md shrink-0">AS</div>
                         <div>
-                            <h4 class="font-black text-navy text-lg">Amit S.</h4>
-                            <p class="text-xs text-gray-500 font-bold uppercase tracking-wider">Basketball Player</p>
+                            <h4 class="font-black text-navy text-base md:text-lg">Amit S.</h4>
+                            <p class="text-[10px] md:text-xs text-gray-500 font-bold uppercase tracking-wider">Basketball Player</p>
                         </div>
                     </div>
-                    <p class="text-gray-600 font-medium leading-relaxed">
+                    <p class="text-gray-600 font-medium leading-relaxed text-sm md:text-base">
                         "Court grip is amazing for Basketball. Very easy booking process online and the staff is super cooperative. My weekend sports spot is officially sorted."
                     </p>
                 </div>
@@ -560,41 +552,37 @@
     </section>
 
     <!-- 6. Gallery Section (With Filtering Tabs) -->
-    <section id="gallery" class="py-24 bg-white relative border-t border-gray-200">
+    <section id="gallery" class="py-16 md:py-24 bg-white relative border-t border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-5xl font-black text-navy text-center mb-8 gs-reveal">The Facility</h2>
+            <h2 class="text-4xl md:text-5xl font-black text-navy text-center mb-6 md:mb-8 gs-reveal">The Facility</h2>
             
             <!-- Gallery Filters -->
-            <div class="flex justify-center gap-4 mb-12 gs-reveal">
-                <button onclick="filterGallery('all')" class="gallery-btn px-6 py-2 rounded-full font-bold bg-navy text-white transition">All Photos</button>
-                <button onclick="filterGallery('action')" class="gallery-btn px-6 py-2 rounded-full font-bold bg-gray-200 text-navy hover:bg-orange hover:text-white transition">Action Shots</button>
-                <button onclick="filterGallery('facility')" class="gallery-btn px-6 py-2 rounded-full font-bold bg-gray-200 text-navy hover:bg-orange hover:text-white transition">Facility & Night View</button>
+            <div class="flex flex-wrap justify-center gap-3 md:gap-4 mb-8 md:mb-12 gs-reveal">
+                <button onclick="filterGallery('all')" class="gallery-btn px-4 py-2 md:px-6 md:py-2 rounded-full text-sm md:text-base font-bold bg-navy text-white transition">All Photos</button>
+                <button onclick="filterGallery('action')" class="gallery-btn px-4 py-2 md:px-6 md:py-2 rounded-full text-sm md:text-base font-bold bg-gray-200 text-navy hover:bg-orange hover:text-white transition">Action</button>
+                <button onclick="filterGallery('facility')" class="gallery-btn px-4 py-2 md:px-6 md:py-2 rounded-full text-sm md:text-base font-bold bg-gray-200 text-navy hover:bg-orange hover:text-white transition">Facility</button>
             </div>
             
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[250px]">
-                <!-- Main Feature (Action) -->
-                <div class="gallery-item action col-span-2 row-span-2 relative rounded-3xl overflow-hidden group hover-lift gs-slide-left shadow-lg">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 auto-rows-[150px] md:auto-rows-[250px]">
+                <div class="gallery-item action col-span-2 row-span-2 relative rounded-2xl md:rounded-3xl overflow-hidden group hover-lift gs-slide-left shadow-lg">
                     <img src="https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                     <div class="absolute inset-0 bg-navy/50 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center backdrop-blur-sm">
-                        <span class="text-white font-black text-2xl border-4 border-orange px-8 py-3 rounded-full shadow-2xl">Pro Football Turf</span>
+                        <span class="text-white font-black text-lg md:text-2xl border-4 border-orange px-4 py-2 md:px-8 md:py-3 rounded-full shadow-2xl">Pro Football Turf</span>
                     </div>
                 </div>
                 
-                <!-- Secondary (Action) -->
-                <div class="gallery-item action relative rounded-3xl overflow-hidden group hover-lift gs-slide-down shadow-lg">
+                <div class="gallery-item action relative rounded-2xl md:rounded-3xl overflow-hidden group hover-lift gs-slide-down shadow-lg">
                     <img src="https://images.unsplash.com/photo-1519861531473-9200262188bf?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                 </div>
                 
-                <!-- Secondary (Action) -->
-                <div class="gallery-item action relative rounded-3xl overflow-hidden group hover-lift gs-slide-right shadow-lg">
+                <div class="gallery-item action relative rounded-2xl md:rounded-3xl overflow-hidden group hover-lift gs-slide-right shadow-lg">
                     <img src="https://images.unsplash.com/photo-1628891435222-06592e071ee9?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                 </div>
                 
-                <!-- Landscape (Facility/Night) -->
-                <div class="gallery-item facility col-span-2 relative rounded-3xl overflow-hidden group hover-lift gs-slide-up shadow-lg">
+                <div class="gallery-item facility col-span-2 relative rounded-2xl md:rounded-3xl overflow-hidden group hover-lift gs-slide-up shadow-lg">
                     <img src="https://images.unsplash.com/photo-1508344928928-7165b67de128?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
-                    <div class="absolute bottom-6 left-6 text-white font-black bg-orange px-4 py-2 rounded-lg shadow-xl text-lg">
-                        Night Vision LED Lighting
+                    <div class="absolute bottom-4 left-4 md:bottom-6 md:left-6 text-white font-black bg-orange px-3 py-1 md:px-4 md:py-2 rounded-lg shadow-xl text-xs md:text-lg">
+                        Night Vision LED
                     </div>
                 </div>
             </div>
@@ -602,72 +590,65 @@
     </section>
 
     <!-- 7. Contact Us & Detailed Rules -->
-    <section id="contact" class="py-24 bg-primary relative">
+    <section id="contact" class="py-16 md:py-24 bg-primary relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="flex flex-col lg:flex-row shadow-2xl rounded-3xl overflow-hidden gs-reveal bg-white border border-gray-200">
                 
                 <!-- Left Sidebar (Contact Info) -->
-                <div class="w-full lg:w-2/5 bg-navy text-white p-12 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-48 h-48 bg-orange/20 rounded-bl-full pointer-events-none"></div>
-                    <div class="absolute bottom-0 left-0 w-32 h-32 bg-teal/10 rounded-tr-full pointer-events-none"></div>
+                <div class="w-full lg:w-2/5 bg-navy text-white p-8 md:p-12 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 md:w-48 h-32 md:h-48 bg-orange/20 rounded-bl-full pointer-events-none"></div>
                     
-                    <h3 class="text-4xl font-black mb-8 relative z-10">Let's Talk</h3>
+                    <h3 class="text-3xl md:text-4xl font-black mb-6 md:mb-8 relative z-10">Let's Talk</h3>
                     
-                    <div class="space-y-8 mb-16 relative z-10">
-                        <div class="flex items-start gap-5">
-                            <i class="fa-solid fa-location-dot text-orange text-3xl mt-1"></i>
+                    <div class="space-y-6 md:space-y-8 mb-10 md:mb-16 relative z-10">
+                        <div class="flex items-start gap-4 md:gap-5">
+                            <i class="fa-solid fa-location-dot text-orange text-2xl md:text-3xl mt-1 shrink-0"></i>
                             <div>
-                                <p class="font-bold text-lg mb-1">Rama Sports</p>
-                                <p class="text-gray-300 font-medium leading-relaxed">Sr. No. 127/1A Paud Road, MIT School Rd, Kothrud, Pune, Maharashtra - 411038</p>
+                                <p class="font-bold text-base md:text-lg mb-1">Rama Sports</p>
+                                <p class="text-gray-300 font-medium leading-relaxed text-sm md:text-base">Sr. No. 127/1A Paud Road, MIT School Rd, Kothrud, Pune, Maharashtra - 411038</p>
                             </div>
                         </div>
                         
-                        <div class="flex items-center gap-5">
-                            <i class="fa-solid fa-phone text-orange text-2xl"></i>
-                            <a href="tel:9156194847" class="text-2xl font-black hover:text-orange transition tracking-wide">+91 91561 94847</a>
-                        </div>
-                        
-                        <div class="flex items-center gap-5">
-                            <i class="brands fa-instagram text-orange text-3xl"></i>
-                            <a href="#" class="text-lg font-bold hover:text-orange transition tracking-wide">@RamaSportsPune</a>
+                        <div class="flex items-center gap-4 md:gap-5">
+                            <i class="fa-solid fa-phone text-orange text-xl md:text-2xl shrink-0"></i>
+                            <a href="tel:9156194847" class="text-xl md:text-2xl font-black hover:text-orange transition tracking-wide">+91 91561 94847</a>
                         </div>
                     </div>
 
-                    <a href="https://wa.me/919156194847" target="_blank" class="relative z-10 w-full block text-center bg-[#25D366] text-white py-5 rounded-xl font-black text-xl hover:bg-[#1ebe5d] transition shadow-2xl hover-lift">
-                        <i class="fa-brands fa-whatsapp mr-2 text-2xl"></i> Chat on WhatsApp
+                    <a href="https://wa.me/919156194847" target="_blank" class="relative z-10 w-full block text-center bg-[#25D366] text-white py-4 md:py-5 rounded-xl font-black text-lg md:text-xl hover:bg-[#1ebe5d] transition shadow-2xl hover-lift">
+                        <i class="fa-brands fa-whatsapp mr-2 text-xl md:text-2xl"></i> Chat on WhatsApp
                     </a>
                 </div>
 
                 <!-- Right Form -->
-                <div class="w-full lg:w-3/5 p-12 lg:p-16 relative bg-white">
-                    <h3 class="text-3xl font-black text-navy mb-10 border-b-4 border-orange pb-4 inline-block">Send an Inquiry</h3>
-                    <form id="contactForm" onsubmit="submitContact(event)" class="space-y-8">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="w-full lg:w-3/5 p-8 md:p-12 lg:p-16 relative bg-white">
+                    <h3 class="text-2xl md:text-3xl font-black text-navy mb-8 border-b-4 border-orange pb-3 md:pb-4 inline-block">Send an Inquiry</h3>
+                    <form id="contactForm" onsubmit="submitContact(event)" class="space-y-6 md:space-y-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                             <div>
-                                <label class="block text-sm font-black text-navy mb-2 uppercase tracking-widest">Full Name</label>
-                                <input type="text" id="c_name" class="w-full border-b-2 border-gray-300 py-3 font-bold text-lg focus:outline-none focus:border-orange bg-transparent transition" required>
+                                <label class="block text-xs md:text-sm font-black text-navy mb-2 uppercase tracking-widest">Full Name</label>
+                                <input type="text" id="c_name" class="w-full border-b-2 border-gray-300 py-2 md:py-3 font-bold text-base md:text-lg focus:outline-none focus:border-orange bg-transparent transition" required>
                             </div>
                             <div>
-                                <label class="block text-sm font-black text-navy mb-2 uppercase tracking-widest">Phone Number</label>
-                                <input type="tel" id="c_phone" class="w-full border-b-2 border-gray-300 py-3 font-bold text-lg focus:outline-none focus:border-orange bg-transparent transition" required>
+                                <label class="block text-xs md:text-sm font-black text-navy mb-2 uppercase tracking-widest">Phone Number</label>
+                                <input type="tel" id="c_phone" class="w-full border-b-2 border-gray-300 py-2 md:py-3 font-bold text-base md:text-lg focus:outline-none focus:border-orange bg-transparent transition" required>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-black text-navy mb-2 uppercase tracking-widest">Subject</label>
-                            <select id="c_subject" class="w-full border-b-2 border-gray-300 py-3 font-bold text-lg focus:outline-none focus:border-orange bg-transparent transition cursor-pointer">
+                            <label class="block text-xs md:text-sm font-black text-navy mb-2 uppercase tracking-widest">Subject</label>
+                            <select id="c_subject" class="w-full border-b-2 border-gray-300 py-2 md:py-3 font-bold text-base md:text-lg focus:outline-none focus:border-orange bg-transparent transition cursor-pointer">
                                 <option>Bulk Booking Inquiry</option>
                                 <option>Tournament Entry</option>
                                 <option>Academy Details</option>
-                                <option>Corporate Events</option>
                                 <option>Other</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-black text-navy mb-2 uppercase tracking-widest">Message</label>
-                            <textarea id="c_message" rows="4" class="w-full border-b-2 border-gray-300 py-3 font-bold text-lg focus:outline-none focus:border-orange bg-transparent transition resize-none" required></textarea>
+                            <label class="block text-xs md:text-sm font-black text-navy mb-2 uppercase tracking-widest">Message</label>
+                            <textarea id="c_message" rows="3" class="w-full border-b-2 border-gray-300 py-2 md:py-3 font-bold text-base md:text-lg focus:outline-none focus:border-orange bg-transparent transition resize-none" required></textarea>
                         </div>
-                        <button type="submit" id="contactBtn" class="orange-btn px-10 py-4 rounded-xl font-black text-lg mt-6 shadow-xl flex items-center justify-center gap-3 w-full md:w-auto">
+                        <button type="submit" id="contactBtn" class="orange-btn w-full md:w-auto px-8 md:px-10 py-4 rounded-xl font-black text-base md:text-lg mt-4 shadow-xl flex items-center justify-center gap-3">
                             Send Message <i class="fa-solid fa-paper-plane"></i>
                         </button>
                     </form>
@@ -675,24 +656,24 @@
             </div>
             
             <!-- Rules & Policies -->
-            <div id="rules" class="mt-16 bg-white p-10 rounded-3xl shadow-lg border border-gray-200 gs-slide-up">
-                <h4 class="text-3xl font-black text-navy mb-8 border-b-2 border-gray-100 pb-4">
-                    <i class="fa-solid fa-file-contract text-orange mr-3"></i> Rules and Policies
+            <div id="rules" class="mt-10 md:mt-16 bg-white p-6 md:p-10 rounded-3xl shadow-lg border border-gray-200 gs-slide-up">
+                <h4 class="text-2xl md:text-3xl font-black text-navy mb-6 md:mb-8 border-b-2 border-gray-100 pb-3 md:pb-4">
+                    <i class="fa-solid fa-file-contract text-orange mr-2 md:mr-3"></i> Rules & Policies
                 </h4>
                 
-                <div class="grid md:grid-cols-2 gap-12">
+                <div class="grid md:grid-cols-2 gap-8 md:gap-12">
                     <div>
-                        <h5 class="font-black text-navy text-xl mb-4 uppercase tracking-widest">General Rules</h5>
-                        <ul class="list-none space-y-4 text-gray-600 font-medium">
-                            <li class="flex items-start"><i class="fa-solid fa-check text-orange mt-1 mr-3"></i> Please wear appropriate sports gear.</li>
-                            <li class="flex items-start"><i class="fa-solid fa-check text-orange mt-1 mr-3"></i> Be present at the venue 10 minutes prior to the slot time.</li>
+                        <h5 class="font-black text-navy text-lg md:text-xl mb-3 md:mb-4 uppercase tracking-widest">General Rules</h5>
+                        <ul class="list-none space-y-3 md:space-y-4 text-gray-600 font-medium text-sm md:text-base">
+                            <li class="flex items-start"><i class="fa-solid fa-check text-orange mt-1 mr-3 shrink-0"></i> Please wear appropriate sports gear.</li>
+                            <li class="flex items-start"><i class="fa-solid fa-check text-orange mt-1 mr-3 shrink-0"></i> Be present at the venue 10 minutes prior to the slot time.</li>
                         </ul>
                     </div>
                     <div>
-                        <h5 class="font-black text-navy text-xl mb-4 uppercase tracking-widest">Cancellation Policy</h5>
-                        <ul class="list-none space-y-4 text-gray-600 font-medium">
-                            <li class="flex items-start"><i class="fa-solid fa-ban text-red-500 mt-1 mr-3"></i> Non Refundable if cancellation is made less than 6 hours from the slot start time.</li>
-                            <li class="flex items-start"><i class="fa-solid fa-rotate-left text-teal mt-1 mr-3"></i> 100% Refundable if cancellation is made 6 hours before the slot start time.</li>
+                        <h5 class="font-black text-navy text-lg md:text-xl mb-3 md:mb-4 uppercase tracking-widest">Cancellation Policy</h5>
+                        <ul class="list-none space-y-3 md:space-y-4 text-gray-600 font-medium text-sm md:text-base">
+                            <li class="flex items-start"><i class="fa-solid fa-ban text-red-500 mt-1 mr-3 shrink-0"></i> Non Refundable if cancellation is made less than 6 hours from start time.</li>
+                            <li class="flex items-start"><i class="fa-solid fa-rotate-left text-teal mt-1 mr-3 shrink-0"></i> 100% Refundable if cancellation is made 6 hours before start time.</li>
                         </ul>
                     </div>
                 </div>
@@ -700,218 +681,221 @@
         </div>
     </section>
 
-    <!-- Map Full Width Interactive -->
-    <div class="w-full h-[500px] grayscale hover:grayscale-0 transition duration-700 gs-reveal">
+    <!-- Map -->
+    <div class="w-full h-[300px] md:h-[500px] grayscale hover:grayscale-0 transition duration-700 gs-reveal">
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.567086082215!2d73.8206049!3d18.5078575!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf71ec5d7279%3A0x9d00d33179968bc!2sRama%20Sports%20Pune!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
     </div>
 
     <!-- Pre-Footer Action Bar -->
-    <div class="bg-orange py-12 relative z-10">
+    <div class="bg-orange py-10 md:py-12 relative z-10">
         <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-6">
-            <h2 class="text-3xl md:text-4xl font-black text-white">Ready for your next game?</h2>
-            <button onclick="scrollToBook()" class="bg-navy text-white px-10 py-4 rounded-full font-black text-xl shadow-2xl hover:scale-105 transition">
+            <h2 class="text-2xl md:text-4xl font-black text-white">Ready for your next game?</h2>
+            <button onclick="scrollToBook()" class="w-full md:w-auto bg-navy text-white px-8 md:px-10 py-4 rounded-full font-black text-lg md:text-xl shadow-2xl hover:scale-105 transition">
                 Book a Slot Now
             </button>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-navy pt-20 pb-10 text-gray-300 relative">
+    <footer class="bg-navy pt-16 md:pt-20 pb-8 md:pb-10 text-gray-300 relative">
         <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange via-teal to-orange"></div>
         <div class="max-w-7xl mx-auto px-4">
             
-            <div class="grid md:grid-cols-3 gap-16 border-b border-gray-700 pb-16 mb-10">
+            <div class="grid md:grid-cols-3 gap-10 md:gap-16 border-b border-gray-700 pb-10 md:pb-16 mb-8 md:mb-10">
                 
                 <!-- Column 1 -->
                 <div>
-                    <span class="font-black text-3xl text-white uppercase tracking-wider mb-6 flex items-center">
+                    <span class="font-black text-2xl md:text-3xl text-white uppercase tracking-wider mb-4 md:mb-6 flex items-center">
                         <i class="fa-solid fa-bolt text-orange mr-3"></i> Rama Sports
                     </span>
-                    <p class="text-base mb-8 leading-relaxed font-medium">
+                    <p class="text-sm md:text-base mb-6 md:mb-8 leading-relaxed font-medium">
                         The premier sports destination for Pune athletes. Professional turf, high-energy vibes, and a community built around the love for the game.
                     </p>
                     <div class="flex gap-4">
-                        <i class="fa-brands fa-cc-visa text-4xl text-gray-500 hover:text-white transition"></i>
-                        <i class="fa-brands fa-cc-mastercard text-4xl text-gray-500 hover:text-white transition"></i>
-                        <i class="fa-brands fa-google-pay text-4xl text-gray-500 hover:text-white transition"></i>
-                        <i class="fa-brands fa-apple-pay text-4xl text-gray-500 hover:text-white transition"></i>
+                        <i class="fa-brands fa-cc-visa text-3xl md:text-4xl text-gray-500 hover:text-white transition cursor-pointer"></i>
+                        <i class="fa-brands fa-cc-mastercard text-3xl md:text-4xl text-gray-500 hover:text-white transition cursor-pointer"></i>
+                        <i class="fa-brands fa-google-pay text-3xl md:text-4xl text-gray-500 hover:text-white transition cursor-pointer"></i>
                     </div>
                 </div>
                 
                 <!-- Column 2 -->
                 <div>
-                    <h4 class="text-white font-black text-xl mb-6 uppercase tracking-widest border-l-4 border-orange pl-3">Quick Links</h4>
-                    <ul class="space-y-4 font-bold">
+                    <h4 class="text-white font-black text-lg md:text-xl mb-4 md:mb-6 uppercase tracking-widest border-l-4 border-orange pl-3">Quick Links</h4>
+                    <ul class="space-y-3 md:space-y-4 font-bold text-sm md:text-base">
                         <li><a href="#about" class="hover:text-orange transition flex items-center"><i class="fa-solid fa-angle-right mr-2 text-orange"></i> About Us</a></li>
                         <li><a href="#booking" class="hover:text-orange transition flex items-center"><i class="fa-solid fa-angle-right mr-2 text-orange"></i> Book a Slot</a></li>
-                        <li><a href="#academy" class="hover:text-orange transition flex items-center"><i class="fa-solid fa-angle-right mr-2 text-orange"></i> Tournaments & Academy</a></li>
-                        <li><a href="#rules" class="hover:text-orange transition flex items-center"><i class="fa-solid fa-angle-right mr-2 text-orange"></i> Privacy Policy & Terms</a></li>
+                        <li><a href="#academy" class="hover:text-orange transition flex items-center"><i class="fa-solid fa-angle-right mr-2 text-orange"></i> Tournaments</a></li>
+                        <li><a href="#rules" class="hover:text-orange transition flex items-center"><i class="fa-solid fa-angle-right mr-2 text-orange"></i> Privacy Policy</a></li>
                     </ul>
                 </div>
                 
                 <!-- Column 3 -->
                 <div>
-                    <h4 class="text-white font-black text-xl mb-6 uppercase tracking-widest border-l-4 border-orange pl-3">Connect With Us</h4>
-                    <p class="text-3xl font-black text-white mb-3 hover:text-orange transition cursor-pointer">+91 91561 94847</p>
-                    <p class="text-base mb-8 font-medium"><i class="fa-solid fa-location-dot text-orange mr-2"></i> Sr. No. 127/1A Paud Road, Kothrud, Pune</p>
+                    <h4 class="text-white font-black text-lg md:text-xl mb-4 md:mb-6 uppercase tracking-widest border-l-4 border-orange pl-3">Connect</h4>
+                    <p class="text-2xl md:text-3xl font-black text-white mb-2 md:mb-3 hover:text-orange transition cursor-pointer">+91 91561 94847</p>
+                    <p class="text-sm md:text-base mb-6 md:mb-8 font-medium"><i class="fa-solid fa-location-dot text-orange mr-2"></i> Kothrud, Pune</p>
                     
-                    <button onclick="openAdmin()" class="border-2 border-gray-600 text-sm font-bold px-6 py-3 rounded-xl hover:bg-orange hover:border-orange transition text-white flex items-center shadow-lg">
-                        <i class="fa-solid fa-lock mr-2"></i> Admin Secure Login
+                    <button onclick="openAdmin()" class="border-2 border-gray-600 text-xs md:text-sm font-bold px-4 py-2 md:px-6 md:py-3 rounded-xl hover:bg-orange hover:border-orange transition text-white flex items-center shadow-lg">
+                        <i class="fa-solid fa-lock mr-2"></i> Admin Login
                     </button>
                 </div>
             </div>
             
-            <div class="text-center md:text-left text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center gap-4 font-semibold">
-                <p>Copyright © 2024 Rama Sports. Designed with Passion for Sports.</p>
-                <p class="flex items-center"><i class="fa-solid fa-shield-halved text-teal mr-2 text-lg"></i> Secure Online Booking</p>
+            <div class="text-center md:text-left text-xs md:text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center gap-4 font-semibold">
+                <p>Copyright © 2024 Rama Sports.</p>
+                <p class="flex items-center"><i class="fa-solid fa-shield-halved text-teal mr-2 text-base md:text-lg"></i> Secure Online Booking</p>
             </div>
             
         </div>
     </footer>
+
 
     <!-- ==========================================
          MODALS & FULL-SCALE ADMIN PANEL 
          ========================================== -->
     
     <!-- Tournament Registration Modal -->
-    <div id="tourneyModal" class="fixed inset-0 bg-black/80 z-[120] justify-center items-center backdrop-blur-md" style="display: none;">
-        <div class="bg-white p-10 rounded-3xl w-full max-w-lg shadow-2xl relative border-t-8 border-navy">
-            <!-- Close Button -->
-            <button onclick="closeTourneyModal()" class="absolute top-6 right-6 text-gray-400 hover:text-red-500 text-2xl transition"><i class="fa-solid fa-times"></i></button>
+    <div id="tourneyModal" class="fixed inset-0 bg-black/80 z-[120] justify-center items-center backdrop-blur-md p-4" style="display: none;">
+        <div class="bg-white p-6 md:p-10 rounded-3xl w-[95%] md:w-full max-w-lg shadow-2xl relative border-t-8 border-navy">
+            <button onclick="closeTourneyModal()" class="absolute top-4 right-4 md:top-6 md:right-6 text-gray-400 hover:text-red-500 text-2xl transition"><i class="fa-solid fa-times"></i></button>
             
-            <h2 class="text-3xl font-black text-navy mb-2">Register Team</h2>
-            <p id="tModName" class="text-orange font-black mb-8 border-b-2 border-gray-100 pb-4 text-xl">Tournament Name</p>
+            <h2 class="text-2xl md:text-3xl font-black text-navy mb-1 md:mb-2">Register Team</h2>
+            <p id="tModName" class="text-orange font-black mb-6 md:mb-8 border-b-2 border-gray-100 pb-3 md:pb-4 text-lg md:text-xl">Tournament Name</p>
             
-            <form onsubmit="submitTourneyReg(event)" class="space-y-6">
+            <form onsubmit="submitTourneyReg(event)" class="space-y-4 md:space-y-6">
                 <div>
-                    <label class="block text-sm font-bold text-navy mb-2 uppercase tracking-widest">Team Name</label>
-                    <input type="text" id="tTeamName" class="w-full bg-gray-50 border-2 border-gray-200 p-4 rounded-xl outline-none focus:border-orange font-bold transition" required>
+                    <label class="block text-xs md:text-sm font-bold text-navy mb-1 md:mb-2 uppercase tracking-widest">Team Name</label>
+                    <input type="text" id="tTeamName" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl outline-none focus:border-orange font-bold transition text-sm md:text-base" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-navy mb-2 uppercase tracking-widest">Captain's Name</label>
-                    <input type="text" id="tCaptName" class="w-full bg-gray-50 border-2 border-gray-200 p-4 rounded-xl outline-none focus:border-orange font-bold transition" required>
+                    <label class="block text-xs md:text-sm font-bold text-navy mb-1 md:mb-2 uppercase tracking-widest">Captain Name</label>
+                    <input type="text" id="tCaptName" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl outline-none focus:border-orange font-bold transition text-sm md:text-base" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-navy mb-2 uppercase tracking-widest">Phone Number</label>
-                    <input type="tel" id="tPhone" class="w-full bg-gray-50 border-2 border-gray-200 p-4 rounded-xl outline-none focus:border-orange font-bold transition" required>
+                    <label class="block text-xs md:text-sm font-bold text-navy mb-1 md:mb-2 uppercase tracking-widest">Phone Number</label>
+                    <input type="tel" id="tPhone" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl outline-none focus:border-orange font-bold transition text-sm md:text-base" required>
                 </div>
                 
-                <button type="submit" class="w-full bg-navy text-white px-8 py-5 rounded-xl font-black text-xl hover:bg-orange transition shadow-xl mt-4 flex justify-center items-center gap-3">
+                <button type="submit" class="w-full bg-navy text-white px-6 py-4 md:px-8 md:py-5 rounded-xl font-black text-lg md:text-xl hover:bg-orange transition shadow-xl mt-4 flex justify-center items-center gap-3">
                     Submit Entry <i class="fa-solid fa-paper-plane"></i>
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- Admin Panel Full Overlay -->
+
+    <!-- ADMIN PANEL FIXED FOR MOBILE SCROLL & COMPACT UI -->
     <div id="admin-panel" class="fixed inset-0 bg-gray-100 z-[100] flex-col md:flex-row overflow-hidden" style="display: none;">
         
-        <!-- Sidebar Navigation -->
-        <div class="w-full md:w-72 bg-navy text-white flex flex-col shadow-2xl h-auto md:h-full">
-            <div class="p-8 border-b border-gray-800 flex justify-between items-center">
-                <h2 class="text-3xl font-black tracking-widest"><i class="fa-solid fa-bolt text-orange mr-3"></i> DB PANEL</h2>
-                <button onclick="closeAdmin()" class="md:hidden text-gray-400 hover:text-white text-2xl"><i class="fa-solid fa-times"></i></button>
+        <!-- Sidebar Navigation (Compact Horizontal on Mobile, Vertical on Desktop) -->
+        <div class="w-full md:w-72 bg-navy text-white flex flex-col shadow-2xl h-auto md:h-full flex-shrink-0 z-20">
+            <!-- Header Area -->
+            <div class="p-4 md:p-8 border-b border-gray-800 flex justify-between items-center">
+                <h2 class="text-xl md:text-3xl font-black tracking-widest flex items-center"><i class="fa-solid fa-bolt text-orange mr-2 md:mr-3"></i> DB PANEL</h2>
+                <button onclick="closeAdmin()" class="text-gray-400 hover:text-white text-3xl md:hidden"><i class="fa-solid fa-times"></i></button>
             </div>
             
-            <div class="p-6 space-y-3 flex-grow">
-                <button onclick="switchAdminTab('dash')" id="tab-dash" class="admin-nav-item active w-full text-left px-6 py-4 rounded-xl font-bold transition flex items-center gap-4 text-lg hover:bg-gray-800">
-                    <i class="fa-solid fa-chart-pie w-6"></i> Dashboard
+            <!-- Tab Links Area (Scrolls Horizontally on Mobile to save space) -->
+            <div class="p-3 md:p-6 flex flex-row md:flex-col gap-2 md:gap-0 md:space-y-3 overflow-x-auto md:overflow-visible flex-grow-0 md:flex-grow custom-scrollbar border-b border-gray-800 md:border-none">
+                <button onclick="switchAdminTab('dash')" id="tab-dash" class="admin-nav-item active flex-shrink-0 md:w-full text-left px-4 md:px-6 py-3 md:py-4 rounded-xl font-bold transition flex items-center gap-2 md:gap-4 text-sm md:text-lg hover:bg-gray-800">
+                    <i class="fa-solid fa-chart-pie md:w-6 text-center"></i> Dashboard
                 </button>
-                <button onclick="switchAdminTab('books')" id="tab-books" class="admin-nav-item w-full text-left px-6 py-4 rounded-xl font-bold transition flex items-center gap-4 text-lg hover:bg-gray-800">
-                    <i class="fa-solid fa-calendar-check w-6"></i> Bookings
+                <button onclick="switchAdminTab('books')" id="tab-books" class="admin-nav-item flex-shrink-0 md:w-full text-left px-4 md:px-6 py-3 md:py-4 rounded-xl font-bold transition flex items-center gap-2 md:gap-4 text-sm md:text-lg hover:bg-gray-800">
+                    <i class="fa-solid fa-calendar-check md:w-6 text-center"></i> Bookings
                 </button>
-                <button onclick="switchAdminTab('finance')" id="tab-finance" class="admin-nav-item w-full text-left px-6 py-4 rounded-xl font-bold transition flex items-center gap-4 text-lg hover:bg-gray-800">
-                    <i class="fa-solid fa-wallet w-6"></i> Financials
+                <button onclick="switchAdminTab('finance')" id="tab-finance" class="admin-nav-item flex-shrink-0 md:w-full text-left px-4 md:px-6 py-3 md:py-4 rounded-xl font-bold transition flex items-center gap-2 md:gap-4 text-sm md:text-lg hover:bg-gray-800">
+                    <i class="fa-solid fa-wallet md:w-6 text-center"></i> Financials
                 </button>
-                <button onclick="switchAdminTab('tournaments')" id="tab-tournaments" class="admin-nav-item w-full text-left px-6 py-4 rounded-xl font-bold transition flex items-center gap-4 text-lg hover:bg-gray-800">
-                    <i class="fa-solid fa-trophy w-6"></i> CMS / Settings
+                <button onclick="switchAdminTab('tournaments')" id="tab-tournaments" class="admin-nav-item flex-shrink-0 md:w-full text-left px-4 md:px-6 py-3 md:py-4 rounded-xl font-bold transition flex items-center gap-2 md:gap-4 text-sm md:text-lg hover:bg-gray-800">
+                    <i class="fa-solid fa-trophy md:w-6 text-center"></i> CMS/Settings
                 </button>
             </div>
             
-            <div class="p-6 border-t border-gray-800">
+            <!-- Desktop Exit Button (Hidden on Mobile because X button handles it) -->
+            <div class="hidden md:block p-6 border-t border-gray-800">
                 <button onclick="closeAdmin()" class="w-full bg-red-500 text-white px-6 py-4 rounded-xl font-black text-lg hover:bg-red-600 transition shadow-lg flex items-center justify-center gap-3">
                     <i class="fa-solid fa-power-off"></i> Exit Admin
                 </button>
             </div>
         </div>
 
-        <!-- Main Admin Content Area -->
-        <div class="flex-1 overflow-y-auto p-6 md:p-12 relative bg-gray-50 w-full h-full custom-scrollbar">
+        <!-- Main Admin Content Area (Flex-1 takes up the remaining height and scrolls) -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-12 relative bg-gray-50 w-full z-10 custom-scrollbar">
             
             <!-- TAB 1: Dashboard -->
             <div id="content-dash" class="admin-tab-content active">
-                <div class="flex justify-between items-end mb-10 border-b border-gray-200 pb-6">
+                <div class="flex justify-between items-end mb-6 md:mb-10 border-b border-gray-200 pb-4 md:pb-6">
                     <div>
-                        <h1 class="text-4xl font-black text-navy mb-2">Platform Overview</h1>
-                        <p class="text-gray-500 font-bold">Real-time stats from Google Sheets Database.</p>
+                        <h1 class="text-2xl md:text-4xl font-black text-navy mb-1 md:mb-2">Platform Overview</h1>
+                        <p class="text-xs md:text-sm text-gray-500 font-bold">Real-time stats from Google Sheets.</p>
                     </div>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-                    <div class="bg-white p-8 rounded-3xl shadow-md border-l-8 border-orange hover-lift">
-                        <p class="text-gray-500 text-sm font-black uppercase tracking-widest">Total Bookings</p>
-                        <h3 id="ad-tot-books" class="text-5xl font-black text-navy mt-4">0</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-10">
+                    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-md border-l-8 border-orange">
+                        <p class="text-gray-500 text-xs md:text-sm font-black uppercase tracking-widest">Total Bookings</p>
+                        <h3 id="ad-tot-books" class="text-4xl md:text-5xl font-black text-navy mt-2 md:mt-4">0</h3>
                     </div>
                     
-                    <div class="bg-white p-8 rounded-3xl shadow-md border-l-8 border-teal hover-lift relative">
-                        <p class="text-gray-500 text-sm font-black uppercase tracking-widest">Gross Revenue</p>
-                        <h3 id="ad-tot-rev" class="text-4xl font-black text-navy mt-4 mb-3">₹0</h3>
+                    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-md border-l-8 border-teal relative">
+                        <p class="text-gray-500 text-xs md:text-sm font-black uppercase tracking-widest">Gross Revenue</p>
+                        <h3 id="ad-tot-rev" class="text-3xl md:text-4xl font-black text-navy mt-2 md:mt-4 mb-2 md:mb-3">₹0</h3>
                         
-                        <div class="pt-3 border-t border-gray-100 flex flex-col gap-1 text-xs font-bold text-gray-500">
+                        <div class="pt-2 md:pt-3 border-t border-gray-100 flex flex-col gap-1 text-[10px] md:text-xs font-bold text-gray-500">
                             <div class="flex justify-between items-center">
-                                <span><i class="fa-solid fa-globe text-teal mr-1"></i> Website:</span> 
-                                <span id="rev-web" class="text-teal text-sm">₹0</span>
+                                <span><i class="fa-solid fa-globe text-teal mr-1"></i> Web:</span> 
+                                <span id="rev-web" class="text-teal text-xs md:text-sm">₹0</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span><i class="fa-solid fa-user-pen text-orange mr-1"></i> Manual Admin:</span> 
-                                <span id="rev-man" class="text-orange text-sm">₹0</span>
+                                <span><i class="fa-solid fa-user-pen text-orange mr-1"></i> Manual:</span> 
+                                <span id="rev-man" class="text-orange text-xs md:text-sm">₹0</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span><i class="fa-solid fa-mobile-screen text-navy mr-1"></i> Playo/Khelomore:</span> 
-                                <span id="rev-app" class="text-navy text-sm">₹0</span>
+                                <span><i class="fa-solid fa-mobile-screen text-navy mr-1"></i> Apps:</span> 
+                                <span id="rev-app" class="text-navy text-xs md:text-sm">₹0</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-white p-8 rounded-3xl shadow-md border-l-8 border-navy hover-lift">
-                        <p class="text-gray-500 text-sm font-black uppercase tracking-widest">Net Profit</p>
-                        <h3 id="ad-net-profit" class="text-5xl font-black text-green-600 mt-4">₹0</h3>
+                    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-md border-l-8 border-navy">
+                        <p class="text-gray-500 text-xs md:text-sm font-black uppercase tracking-widest">Net Profit</p>
+                        <h3 id="ad-net-profit" class="text-4xl md:text-5xl font-black text-green-600 mt-2 md:mt-4">₹0</h3>
                     </div>
                 </div>
             </div>
 
             <!-- TAB 2: Booking Manager -->
             <div id="content-books" class="admin-tab-content">
-                <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 border-b border-gray-200 pb-6">
-                    <h1 class="text-4xl font-black text-navy">Booking Manager</h1>
-                    <div class="flex gap-4 w-full md:w-auto">
-                        <button onclick="exportToCSV()" class="flex-1 md:flex-none border-2 border-navy text-navy px-6 py-3 rounded-xl font-black hover:bg-navy hover:text-white transition shadow-sm flex items-center justify-center gap-2">
+                <div class="flex flex-col md:flex-row justify-between md:items-center mb-6 md:mb-8 gap-4 border-b border-gray-200 pb-4 md:pb-6">
+                    <h1 class="text-2xl md:text-4xl font-black text-navy">Booking Manager</h1>
+                    <div class="flex gap-2 md:gap-4 w-full md:w-auto">
+                        <button onclick="exportToCSV()" class="flex-1 md:flex-none border-2 border-navy text-navy px-4 py-2 md:px-6 md:py-3 rounded-xl text-xs md:text-base font-black hover:bg-navy hover:text-white transition shadow-sm flex items-center justify-center gap-2">
                             <i class="fa-solid fa-file-csv"></i> Export CSV
                         </button>
-                        <button onclick="document.getElementById('manualBookModal').style.display='flex'" class="flex-1 md:flex-none bg-orange text-white px-6 py-3 rounded-xl font-black shadow-lg hover:bg-[#e65c00] transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-plus"></i> Manual Booking
+                        <button onclick="document.getElementById('manualBookModal').style.display='flex'" class="flex-1 md:flex-none bg-orange text-white px-4 py-2 md:px-6 md:py-3 rounded-xl text-xs md:text-base font-black shadow-lg hover:bg-[#e65c00] transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-plus"></i> Manual Book
                         </button>
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-200">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm whitespace-nowrap">
+                <div class="bg-white rounded-[2rem] shadow-lg overflow-hidden border border-gray-200">
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left text-xs md:text-sm whitespace-nowrap min-w-[700px]">
                             <thead class="bg-navy text-white">
                                 <tr>
-                                    <th class="p-6 font-bold uppercase tracking-wider">Date & Time</th>
-                                    <th class="p-6 font-bold uppercase tracking-wider">Customer Info</th>
-                                    <th class="p-6 font-bold uppercase tracking-wider">Sport</th>
-                                    <th class="p-6 font-bold uppercase tracking-wider">Price Paid</th>
-                                    <th class="p-6 font-bold uppercase tracking-wider">Booking Source</th>
+                                    <th class="p-4 md:p-6 font-bold uppercase tracking-wider">Date & Time</th>
+                                    <th class="p-4 md:p-6 font-bold uppercase tracking-wider">Customer Info</th>
+                                    <th class="p-4 md:p-6 font-bold uppercase tracking-wider">Sport</th>
+                                    <th class="p-4 md:p-6 font-bold uppercase tracking-wider">Price Paid</th>
+                                    <th class="p-4 md:p-6 font-bold uppercase tracking-wider">Source</th>
                                 </tr>
                             </thead>
-                            <tbody id="adminTableBody" class="divide-y divide-gray-100 text-base">
+                            <tbody id="adminTableBody" class="divide-y divide-gray-100 text-sm md:text-base">
                                 <!-- Real data injected here -->
                             </tbody>
                         </table>
-                        <div id="adminTableEmpty" class="p-12 text-center text-gray-400 font-bold text-lg">
-                            <i class="fa-solid fa-folder-open text-6xl mb-4 text-gray-200"></i><br>
+                        <div id="adminTableEmpty" class="p-8 md:p-12 text-center text-gray-400 font-bold text-sm md:text-lg">
+                            <i class="fa-solid fa-folder-open text-4xl md:text-6xl mb-3 md:mb-4 text-gray-200"></i><br>
                             Database empty. No bookings found.
                         </div>
                     </div>
@@ -920,46 +904,46 @@
 
             <!-- TAB 3: Financials (Expenses) -->
             <div id="content-finance" class="admin-tab-content">
-                <h1 class="text-4xl font-black text-navy mb-8 border-b border-gray-200 pb-6">Financials & Expenses</h1>
+                <h1 class="text-2xl md:text-4xl font-black text-navy mb-6 md:mb-8 border-b border-gray-200 pb-4 md:pb-6">Financials</h1>
                 
-                <div class="grid md:grid-cols-2 gap-10">
+                <div class="grid md:grid-cols-2 gap-6 md:gap-10">
                     <!-- Add Expense Form -->
-                    <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-200">
-                        <h3 class="font-black text-2xl text-navy mb-6 border-b-2 border-gray-100 pb-4">
-                            <i class="fa-solid fa-money-bill-transfer text-orange mr-3"></i>Log an Expense
+                    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-200">
+                        <h3 class="font-black text-xl md:text-2xl text-navy mb-4 md:mb-6 border-b-2 border-gray-100 pb-3 md:pb-4">
+                            <i class="fa-solid fa-money-bill-transfer text-orange mr-2 md:mr-3"></i>Log Expense
                         </h3>
-                        <form onsubmit="submitExpense(event)" class="space-y-6">
+                        <form onsubmit="submitExpense(event)" class="space-y-4 md:space-y-6">
                             <div>
-                                <label class="block text-sm font-black uppercase tracking-widest mb-2">Category</label>
-                                <select id="expCategory" class="w-full bg-gray-50 border-2 border-gray-200 p-4 rounded-xl focus:outline-none focus:border-orange font-bold text-navy transition cursor-pointer">
+                                <label class="block text-xs md:text-sm font-black uppercase tracking-widest mb-1 md:mb-2">Category</label>
+                                <select id="expCategory" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl focus:outline-none focus:border-orange font-bold text-navy transition cursor-pointer text-sm md:text-base">
                                     <option>Electricity/Lighting</option>
                                     <option>Staff Salary</option>
-                                    <option>Maintenance/Turf Repair</option>
+                                    <option>Maintenance</option>
                                     <option>Miscellaneous</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-black uppercase tracking-widest mb-2">Amount (₹)</label>
-                                <input type="number" id="expAmount" placeholder="e.g. 1500" class="w-full bg-gray-50 border-2 border-gray-200 p-4 rounded-xl focus:outline-none focus:border-orange font-bold text-navy transition" required>
+                                <label class="block text-xs md:text-sm font-black uppercase tracking-widest mb-1 md:mb-2">Amount (₹)</label>
+                                <input type="number" id="expAmount" placeholder="e.g. 1500" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl focus:outline-none focus:border-orange font-bold text-navy transition text-sm md:text-base" required>
                             </div>
                             <div>
-                                <label class="block text-sm font-black uppercase tracking-widest mb-2">Description</label>
-                                <input type="text" id="expDesc" placeholder="e.g., Monthly Electric Bill" class="w-full bg-gray-50 border-2 border-gray-200 p-4 rounded-xl focus:outline-none focus:border-orange font-bold text-navy transition" required>
+                                <label class="block text-xs md:text-sm font-black uppercase tracking-widest mb-1 md:mb-2">Description</label>
+                                <input type="text" id="expDesc" placeholder="e.g. Electric Bill" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl focus:outline-none focus:border-orange font-bold text-navy transition text-sm md:text-base" required>
                             </div>
-                            <button type="submit" class="w-full bg-navy text-white py-4 rounded-xl font-black text-xl hover:bg-orange transition shadow-xl mt-4">
+                            <button type="submit" class="w-full bg-navy text-white py-3 md:py-4 rounded-xl font-black text-base md:text-xl hover:bg-orange transition shadow-xl mt-2 md:mt-4">
                                 Save Expense
                             </button>
                         </form>
                     </div>
 
                     <!-- Expense List -->
-                    <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-200">
-                        <h3 class="font-black text-2xl text-navy mb-6 border-b-2 border-gray-100 pb-4">Recent Expenses List</h3>
-                        <div class="overflow-y-auto max-h-[500px] pr-2 custom-scrollbar">
-                            <ul id="expenseList" class="space-y-4">
+                    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-200">
+                        <h3 class="font-black text-xl md:text-2xl text-navy mb-4 md:mb-6 border-b-2 border-gray-100 pb-3 md:pb-4">Recent Expenses</h3>
+                        <div class="overflow-y-auto max-h-[400px] md:max-h-[500px] pr-2 custom-scrollbar">
+                            <ul id="expenseList" class="space-y-3 md:space-y-4">
                                 <!-- Injected via JS -->
                             </ul>
-                            <div id="expenseEmpty" class="text-center text-gray-400 py-10 font-bold text-lg">
+                            <div id="expenseEmpty" class="text-center text-gray-400 py-10 font-bold text-sm md:text-lg">
                                 No expenses logged yet.
                             </div>
                         </div>
@@ -969,76 +953,56 @@
 
             <!-- TAB 4: CMS Settings & Tournaments -->
             <div id="content-tournaments" class="admin-tab-content">
-                <h1 class="text-4xl font-black text-navy mb-8 border-b border-gray-200 pb-6">CMS & Settings</h1>
+                <h1 class="text-2xl md:text-4xl font-black text-navy mb-6 md:mb-8 border-b border-gray-200 pb-4 md:pb-6">Settings</h1>
                 
-                <!-- Tournaments Maker -->
-                <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-200 mb-10">
-                    <h3 class="font-black text-2xl text-navy mb-6 border-b-2 border-gray-100 pb-4">
-                        <i class="fa-solid fa-trophy text-orange mr-3"></i>Publish a New Tournament
+                <!-- Blackout Slot Manual Block -->
+                <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-red-200 mb-8 md:mb-10">
+                    <h3 class="font-black text-xl md:text-2xl text-red-600 mb-4 md:mb-6 border-b-2 border-red-100 pb-3 md:pb-4">
+                        <i class="fa-solid fa-ban mr-2 md:mr-3"></i>Blackout / Block Slot
                     </h3>
-                    <form onsubmit="addTournament(event)" class="grid md:grid-cols-2 gap-6">
+                    <p class="text-xs md:text-base text-gray-500 mb-4 md:mb-6 font-bold">Use this to forcefully block a slot from online booking.</p>
+                    <form onsubmit="blackoutSlot(event)" class="flex flex-col lg:flex-row gap-4 md:gap-6">
+                        <input type="date" id="boDate" class="bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl flex-1 focus:border-orange font-bold text-navy outline-none text-sm md:text-base" required>
+                        <select id="boSport" class="bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl flex-1 focus:border-orange font-bold text-navy outline-none text-sm md:text-base">
+                            <option value="Basketball">Basketball</option>
+                            <option value="Pickle Ball">Pickle Ball</option>
+                            <option value="Box Cricket Turf">Box Cricket Turf</option>
+                        </select>
+                        <input type="text" id="boTime" placeholder="e.g. 06:00 AM - 07:00 AM" class="bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl flex-1 focus:border-orange font-bold text-navy outline-none text-sm md:text-base" required>
+                        <button type="submit" class="bg-red-500 text-white px-6 py-3 md:px-8 md:py-4 rounded-xl font-black text-base md:text-xl hover:bg-red-600 shadow-xl transition">
+                            Block Now
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Tournaments Maker -->
+                <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-200 mb-8 md:mb-10">
+                    <h3 class="font-black text-xl md:text-2xl text-navy mb-4 md:mb-6 border-b-2 border-gray-100 pb-3 md:pb-4">
+                        <i class="fa-solid fa-trophy text-orange mr-2 md:mr-3"></i>Publish Tournament
+                    </h3>
+                    <form onsubmit="addTournament(event)" class="grid md:grid-cols-2 gap-4 md:gap-6">
                         <div>
-                            <label class="block text-sm font-black uppercase tracking-widest mb-2">Tournament Name</label>
-                            <input type="text" id="cmsTName" placeholder="e.g. Rama Summer Cup '24" class="bg-gray-50 border-2 border-gray-200 w-full p-4 rounded-xl outline-none focus:border-orange font-bold transition" required>
+                            <label class="block text-xs md:text-sm font-black uppercase tracking-widest mb-1 md:mb-2">Tournament Name</label>
+                            <input type="text" id="cmsTName" placeholder="e.g. Summer Cup" class="bg-gray-50 border-2 border-gray-200 w-full p-3 md:p-4 rounded-xl outline-none focus:border-orange font-bold transition text-sm md:text-base" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-black uppercase tracking-widest mb-2">Sport Type</label>
-                            <select id="cmsTSport" class="bg-gray-50 border-2 border-gray-200 w-full p-4 rounded-xl outline-none focus:border-orange font-bold transition">
+                            <label class="block text-xs md:text-sm font-black uppercase tracking-widest mb-1 md:mb-2">Sport Type</label>
+                            <select id="cmsTSport" class="bg-gray-50 border-2 border-gray-200 w-full p-3 md:p-4 rounded-xl outline-none focus:border-orange font-bold transition text-sm md:text-base">
                                 <option>Box Cricket Turf</option>
                                 <option>Basketball</option>
                                 <option>Pickle Ball</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-black uppercase tracking-widest mb-2">Prize Pool</label>
-                            <input type="text" id="cmsTPrize" placeholder="e.g. ₹50,000" class="bg-gray-50 border-2 border-gray-200 w-full p-4 rounded-xl outline-none focus:border-orange font-bold transition" required>
+                            <label class="block text-xs md:text-sm font-black uppercase tracking-widest mb-1 md:mb-2">Prize Pool</label>
+                            <input type="text" id="cmsTPrize" placeholder="e.g. ₹50,000" class="bg-gray-50 border-2 border-gray-200 w-full p-3 md:p-4 rounded-xl outline-none focus:border-orange font-bold transition text-sm md:text-base" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-black uppercase tracking-widest mb-2">Team Entry Fee (₹)</label>
-                            <input type="number" id="cmsTFee" placeholder="e.g. 2500" class="bg-gray-50 border-2 border-gray-200 w-full p-4 rounded-xl outline-none focus:border-orange font-bold transition" required>
+                            <label class="block text-xs md:text-sm font-black uppercase tracking-widest mb-1 md:mb-2">Entry Fee (₹)</label>
+                            <input type="number" id="cmsTFee" placeholder="e.g. 2500" class="bg-gray-50 border-2 border-gray-200 w-full p-3 md:p-4 rounded-xl outline-none focus:border-orange font-bold transition text-sm md:text-base" required>
                         </div>
-                        <button type="submit" class="bg-navy text-white px-8 py-5 rounded-xl font-black text-xl hover:bg-orange transition shadow-xl md:col-span-2 mt-2">
+                        <button type="submit" class="bg-navy text-white px-6 py-4 md:px-8 md:py-5 rounded-xl font-black text-base md:text-xl hover:bg-orange transition shadow-xl md:col-span-2 mt-2">
                             Publish to Live Website
-                        </button>
-                    </form>
-                </div>
-
-                <!-- MACRODROID APP INSTRUCTIONS -->
-                <div class="bg-blue-50 p-8 rounded-3xl shadow-lg border border-blue-200 mb-10">
-                    <h3 class="font-black text-2xl text-blue-800 mb-4">
-                        <i class="fa-solid fa-mobile-screen mr-3"></i>How to Connect Playo/Khelomore SMS
-                    </h3>
-                    <p class="text-blue-900 mb-4 font-medium leading-relaxed">
-                        Because 3rd party booking apps send random text formats, the system cannot safely guess the date/time automatically. 
-                        Follow these steps to send the SMS to your dashboard, and then you can click <b>"Manual Booking"</b> to officially block the slot.
-                    </p>
-                    <ol class="list-decimal pl-5 space-y-2 text-blue-900 font-bold text-sm">
-                        <li>Download the <b>MacroDroid</b> app on your Android phone.</li>
-                        <li>Create a new Macro. Set <b>Trigger</b> to "SMS Received" (Select the Playo/Khelomore sender name).</li>
-                        <li>Set <b>Action</b> to "HTTP Request". Method: POST.</li>
-                        <li>URL: Paste your Google Script URL.</li>
-                        <li>Content Type: <code>application/x-www-form-urlencoded</code></li>
-                        <li>Add Parameters: <code>type=macrodroid</code> and <code>sms_text=[SMS Message Content Text]</code></li>
-                        <li>Now, whenever an SMS comes, it will show up in the Bookings table for you to review and block manually!</li>
-                    </ol>
-                </div>
-
-                <!-- Blackout Slot Manual Block -->
-                <div class="bg-white p-8 rounded-3xl shadow-lg border border-red-200">
-                    <h3 class="font-black text-2xl text-red-600 mb-6 border-b-2 border-red-100 pb-4">
-                        <i class="fa-solid fa-ban mr-3"></i>Blackout / Force Block a Slot
-                    </h3>
-                    <p class="text-base text-gray-500 mb-6 font-bold">Use this to forcefully block a slot from online booking (e.g., for turf maintenance or private events).</p>
-                    <form onsubmit="blackoutSlot(event)" class="flex flex-col lg:flex-row gap-6">
-                        <input type="date" id="boDate" class="bg-gray-50 border-2 border-gray-200 p-4 rounded-xl flex-1 focus:border-orange font-bold text-navy outline-none" required>
-                        <select id="boSport" class="bg-gray-50 border-2 border-gray-200 p-4 rounded-xl flex-1 focus:border-orange font-bold text-navy outline-none">
-                            <option value="Basketball">Basketball</option>
-                            <option value="Pickle Ball">Pickle Ball</option>
-                            <option value="Box Cricket Turf">Box Cricket Turf</option>
-                        </select>
-                        <input type="text" id="boTime" placeholder="e.g., 06:00 AM - 07:00 AM" class="bg-gray-50 border-2 border-gray-200 p-4 rounded-xl flex-1 focus:border-orange font-bold text-navy outline-none" required>
-                        <button type="submit" class="bg-red-500 text-white px-8 py-4 rounded-xl font-black text-xl hover:bg-red-600 shadow-xl transition">
-                            Block Slot Now
                         </button>
                     </form>
                 </div>
@@ -1047,49 +1011,49 @@
     </div>
 
     <!-- Manual Booking Modal inside Admin -->
-    <div id="manualBookModal" class="fixed inset-0 bg-black/80 z-[110] justify-center items-center backdrop-blur-md" style="display: none;">
-        <div class="bg-white p-8 md:p-10 rounded-3xl w-full max-w-lg shadow-2xl border-t-8 border-orange relative max-h-[90vh] overflow-y-auto">
-            <h2 class="text-3xl font-black text-navy mb-6">Add Manual Booking</h2>
-            <form onsubmit="submitManualBooking(event)" class="space-y-5">
+    <div id="manualBookModal" class="fixed inset-0 bg-black/80 z-[110] justify-center items-center backdrop-blur-md p-4" style="display: none;">
+        <div class="bg-white p-6 md:p-10 rounded-3xl w-[95%] md:w-full max-w-lg shadow-2xl border-t-8 border-orange relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <h2 class="text-2xl md:text-3xl font-black text-navy mb-4 md:mb-6">Add Manual Booking</h2>
+            <form onsubmit="submitManualBooking(event)" class="space-y-4 md:space-y-5">
                 <div>
-                    <label class="block text-sm font-bold text-navy mb-1 uppercase tracking-widest">Customer Name</label>
-                    <input type="text" id="mName" class="w-full bg-gray-50 border-2 border-gray-200 p-4 rounded-xl focus:border-orange focus:bg-white outline-none font-bold transition" required>
+                    <label class="block text-xs md:text-sm font-bold text-navy mb-1 uppercase tracking-widest">Customer Name</label>
+                    <input type="text" id="mName" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl focus:border-orange focus:bg-white outline-none font-bold transition text-sm md:text-base" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-navy mb-1 uppercase tracking-widest">Phone Number</label>
-                    <input type="tel" id="mPhone" class="w-full bg-gray-50 border-2 border-gray-200 p-4 rounded-xl focus:border-orange focus:bg-white outline-none font-bold transition" required>
+                    <label class="block text-xs md:text-sm font-bold text-navy mb-1 uppercase tracking-widest">Phone Number</label>
+                    <input type="tel" id="mPhone" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl focus:border-orange focus:bg-white outline-none font-bold transition text-sm md:text-base" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-navy mb-1 uppercase tracking-widest">Sport</label>
-                    <select id="mSport" class="w-full bg-gray-50 border-2 border-gray-200 p-4 rounded-xl focus:border-orange focus:bg-white outline-none font-bold transition">
+                    <label class="block text-xs md:text-sm font-bold text-navy mb-1 uppercase tracking-widest">Sport</label>
+                    <select id="mSport" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl focus:border-orange focus:bg-white outline-none font-bold transition text-sm md:text-base">
                         <option value="Basketball">Basketball</option>
                         <option value="Pickle Ball">Pickle Ball</option>
                         <option value="Box Cricket Turf">Box Cricket Turf</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-navy mb-1 uppercase tracking-widest">Date</label>
-                    <input type="date" id="mDate" class="w-full bg-gray-50 border-2 border-gray-200 p-4 rounded-xl focus:border-orange focus:bg-white outline-none font-bold transition" required>
+                    <label class="block text-xs md:text-sm font-bold text-navy mb-1 uppercase tracking-widest">Date</label>
+                    <input type="date" id="mDate" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl focus:border-orange focus:bg-white outline-none font-bold transition text-sm md:text-base" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-navy mb-1 uppercase tracking-widest">Time Slot</label>
-                    <input type="text" id="mTime" placeholder="e.g., 06:00 AM - 08:00 AM" class="w-full bg-gray-50 border-2 border-gray-200 p-4 rounded-xl focus:border-orange focus:bg-white outline-none font-bold transition" required>
+                    <label class="block text-xs md:text-sm font-bold text-navy mb-1 uppercase tracking-widest">Time Slot</label>
+                    <input type="text" id="mTime" placeholder="e.g. 06:00 AM - 08:00 AM" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl focus:border-orange focus:bg-white outline-none font-bold transition text-sm md:text-base" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-navy mb-1 uppercase tracking-widest">Amount Collected (₹)</label>
-                    <input type="number" id="mPrice" placeholder="Price" class="w-full bg-gray-50 border-2 border-gray-200 p-4 rounded-xl focus:border-orange focus:bg-white outline-none font-bold transition" required>
+                    <label class="block text-xs md:text-sm font-bold text-navy mb-1 uppercase tracking-widest">Amount Collected (₹)</label>
+                    <input type="number" id="mPrice" placeholder="Price" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl focus:border-orange focus:bg-white outline-none font-bold transition text-sm md:text-base" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-navy mb-1 uppercase tracking-widest">Booking Source</label>
-                    <select id="mSource" class="w-full bg-gray-50 border-2 border-gray-200 p-4 rounded-xl focus:border-orange focus:bg-white outline-none font-bold transition">
+                    <label class="block text-xs md:text-sm font-bold text-navy mb-1 uppercase tracking-widest">Source</label>
+                    <select id="mSource" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl focus:border-orange focus:bg-white outline-none font-bold transition text-sm md:text-base">
                         <option value="Admin Manual">Manual / Walk-In</option>
-                        <option value="MacroDroid SMS">Playo / Khelomore App</option>
+                        <option value="MacroDroid SMS">App / External</option>
                     </select>
                 </div>
                 
-                <div class="flex justify-end gap-4 mt-8 pt-4 border-t border-gray-100">
-                    <button type="button" onclick="document.getElementById('manualBookModal').style.display='none'" class="px-6 py-3 text-gray-500 hover:text-gray-800 font-black text-lg transition">Cancel</button>
-                    <button type="submit" class="bg-navy text-white px-8 py-3 rounded-xl font-black text-lg hover:bg-orange transition shadow-lg">Save Booking</button>
+                <div class="flex justify-end gap-3 md:gap-4 mt-6 pt-4 border-t border-gray-100">
+                    <button type="button" onclick="document.getElementById('manualBookModal').style.display='none'" class="px-4 py-2 md:px-6 md:py-3 text-gray-500 hover:text-gray-800 font-black text-sm md:text-lg transition">Cancel</button>
+                    <button type="submit" class="bg-navy text-white px-6 py-3 md:px-8 md:py-3 rounded-xl font-black text-sm md:text-lg hover:bg-orange transition shadow-lg">Save Booking</button>
                 </div>
             </form>
         </div>
@@ -1100,6 +1064,18 @@
          JAVASCRIPT LOGIC
          ========================================== -->
     <script>
+        // ----------------------------------------------------
+        // Mobile Navbar Hamburger Menu Logic
+        // ----------------------------------------------------
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+            }
+        }
+
         // ----------------------------------------------------
         // 1. SMART DB ENGINE (Handles Local & Google Sheets)
         // ----------------------------------------------------
@@ -1117,8 +1093,6 @@
         let selectedDate = ''; 
         let selectedSlotsArray = [];
 
-        // FIXED: The database merge perfectly combines live online data with local offline data
-        // It also uses plain-text POST to avoid CORS issues
         async function smartDbAction(action, payload = null) {
             const isOffline = GOOGLE_SCRIPT_URL.includes('YOUR_GOOGLE');
             
@@ -1128,7 +1102,6 @@
                     const r = await fetch(GOOGLE_SCRIPT_URL + "?action=getAdminData"); 
                     const d = await r.json(); 
                     
-                    // Merging Local & Server ensures UI reflects bookings instantly even if server lags!
                     const allBookings = [...localBookings, ...(d.bookings || [])];
                     const uniqueBookings = Array.from(new Map(allBookings.map(b => [b.date + b.timeSlot + b.sport, b])).values());
                     
@@ -1140,7 +1113,6 @@
                     return { bookings: localBookings, expenses: localExpenses, tournaments: localTournaments }; 
                 }
             } else {
-                // Post actions locally immediately
                 if (action === 'addBooking') {
                     const b = {...payload, timestamp: new Date().toLocaleString()};
                     localBookings.push(b); 
@@ -1158,7 +1130,6 @@
 
                 if(!isOffline) {
                     try { 
-                        // FIX: Use text/plain to bypass complex CORS preflight issues
                         await fetch(GOOGLE_SCRIPT_URL, { 
                             method: 'POST', 
                             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -1173,19 +1144,16 @@
         // 2. UI INITIALIZATION & ANIMATIONS (GSAP)
         // ----------------------------------------------------
         window.addEventListener('load', () => {
-            // Remove Preloader Safely
             setTimeout(() => { 
                 document.getElementById('preloader').style.opacity = '0'; 
                 setTimeout(() => document.getElementById('preloader').style.display = 'none', 600); 
                 ScrollTrigger.refresh(); 
             }, 1000);
             
-            // Restrict Date Pickers to Today or Future
             const todayStr = new Date().toISOString().split("T")[0];
             document.getElementById('bookDate').min = todayStr; 
             document.getElementById('heroDate').min = todayStr;
             
-            // GSAP Scroll Animations
             gsap.registerPlugin(ScrollTrigger);
             gsap.utils.toArray('.gs-reveal').forEach(elem => {
                 gsap.fromTo(elem, { autoAlpha: 0, y: 30 }, { duration: 1, autoAlpha: 1, y: 0, scrollTrigger: { trigger: elem, start: "top 85%" } });
@@ -1200,7 +1168,6 @@
                 gsap.fromTo(elem, { autoAlpha: 0, y: 50 }, { duration: 1, autoAlpha: 1, y: 0, scrollTrigger: { trigger: elem, start: "top 85%" } });
             });
 
-            // Sticky Navbar Controller
             window.addEventListener('scroll', () => {
                 const nav = document.getElementById('navbar');
                 if (window.scrollY > 50) { 
@@ -1212,15 +1179,13 @@
                 }
             });
 
-            // Initialize App State
             setSport('Basketball');
             renderFrontendTournaments();
         });
 
         // ----------------------------------------------------
-        // 3. BOOKING ENGINE (1-Hour strict mapping & Multi-select)
+        // 3. BOOKING ENGINE
         // ----------------------------------------------------
-        
         const pricingLogic = {
             'Basketball': { 
                 weekday: [{start: 6, end: 8, price: 750}, {start: 19, end: 22, price: 750}], 
@@ -1282,7 +1247,7 @@
             updateSummaryUI();
             
             const container = document.getElementById('slotContainer');
-            container.innerHTML = '<div class="col-span-full text-center py-10"><i class="fa-solid fa-spinner fa-spin text-orange text-4xl mb-4"></i><br><span class="font-bold text-gray-500">Loading 1-Hour Database Slots...</span></div>';
+            container.innerHTML = '<div class="col-span-full text-center py-10"><i class="fa-solid fa-spinner fa-spin text-orange text-4xl mb-4"></i><br><span class="font-bold text-gray-500">Loading Slots...</span></div>';
 
             const dayOfWeek = new Date(dateInput).getDay();
             let dayType = 'weekday'; 
@@ -1299,7 +1264,6 @@
                 for(let i = period.start; i < period.end; i++) {
                     let timeLabel = `${formatTime(i)} - ${formatTime(i+1)}`;
                     
-                    // FIXED: This checks the string perfectly, handling App script random time zone offsets gracefully!
                     const isBlocked = blocks.some(b => {
                         let dbDate = b.date;
                         if(dbDate && typeof dbDate === 'string' && dbDate.includes('T')) dbDate = dbDate.split('T')[0];
@@ -1315,9 +1279,8 @@
 
         function createSlotCard(timeStr, price, container, isBlocked) {
             const div = document.createElement('div');
-            // 'slot-booked' is added here, activating the strikethrough CSS
-            div.className = `slot-card p-4 rounded-xl text-center flex flex-col justify-center items-center h-24 ${isBlocked ? 'slot-booked' : ''}`;
-            div.innerHTML = `<span class="font-black text-base mb-1">${timeStr}</span><span class="text-sm font-bold">₹${price}</span>`;
+            div.className = `slot-card p-3 md:p-4 rounded-xl text-center flex flex-col justify-center items-center h-20 md:h-24 ${isBlocked ? 'slot-booked' : ''}`;
+            div.innerHTML = `<span class="font-black text-sm md:text-base mb-1">${timeStr}</span><span class="text-xs md:text-sm font-bold">₹${price}</span>`;
             
             if (!isBlocked) {
                 div.onclick = () => {
@@ -1358,11 +1321,12 @@
             priceContainer.innerHTML = `₹${tot}`;
         }
 
+        // ---------- WITH UPI PAYMENT LOGIC ----------
         async function submitBooking(e) {
             e.preventDefault();
             if (selectedSlotsArray.length === 0) return alert('Please select at least one hourly slot to book.');
 
-            // YOUR BUSINESS UPI ID HERE (e.g., yourname@okicici, 9999999999@ybl)
+            // YOUR BUSINESS UPI ID
             const merchantUpiId = "9422231321@fam"; 
             const merchantName = "Rama Sports";
 
@@ -1389,7 +1353,6 @@
             await smartDbAction('addBooking', payload);
 
             // Generate UPI URL
-            // Format: upi://pay?pa=UPI_ID&pn=NAME&am=AMOUNT&cu=INR
             const upiString = `upi://pay?pa=${merchantUpiId}&pn=${encodeURIComponent(merchantName)}&am=${totalAmt}&cu=INR&tn=Turf Booking ${selectedDate}`;
 
             // Generate QR Code Image URL (Using a free, safe QR generator API)
@@ -1400,28 +1363,28 @@
             paymentModal.id = "upiPaymentModal";
             paymentModal.className = "fixed inset-0 bg-navy/90 z-[9999] flex justify-center items-center backdrop-blur-sm p-4";
             paymentModal.innerHTML = `
-                <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative border-t-8 border-orange">
+                <div class="bg-white rounded-3xl p-6 md:p-8 w-[95%] md:max-w-md text-center shadow-2xl relative border-t-8 border-orange">
                     <button onclick="document.getElementById('upiPaymentModal').remove()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl"><i class="fa-solid fa-times"></i></button>
-                    <h2 class="text-3xl font-black text-navy mb-2">Complete Payment</h2>
-                    <p class="text-gray-500 font-bold mb-6">Total Amount: <span class="text-orange text-xl">₹${totalAmt}</span></p>
+                    <h2 class="text-2xl md:text-3xl font-black text-navy mb-2">Complete Payment</h2>
+                    <p class="text-gray-500 font-bold mb-4 md:mb-6">Total Amount: <span class="text-orange text-lg md:text-xl">₹${totalAmt}</span></p>
                     
                     <!-- Desktop: Scan QR -->
                     <div class="hidden md:block mb-6">
-                        <p class="text-sm font-bold text-navy mb-3 uppercase tracking-widest">Scan to Pay via any UPI App</p>
+                        <p class="text-xs md:text-sm font-bold text-navy mb-3 uppercase tracking-widest">Scan to Pay via any UPI App</p>
                         <img src="${qrImageUrl}" alt="UPI QR Code" class="mx-auto border-4 border-gray-100 rounded-xl shadow-sm">
                     </div>
 
                     <!-- Mobile: Direct App Open -->
                     <div class="block md:hidden mb-6">
-                        <a href="${upiString}" class="block w-full bg-navy text-white py-4 rounded-xl font-black text-lg hover:bg-orange transition shadow-xl flex justify-center items-center gap-3">
-                            <i class="fa-solid fa-mobile-screen"></i> Pay via GPay / PhonePe
+                        <a href="${upiString}" class="block w-full bg-navy text-white py-4 rounded-xl font-black text-base hover:bg-orange transition shadow-xl flex justify-center items-center gap-3">
+                            <i class="fa-solid fa-mobile-screen"></i> Pay via App (GPay/PhonePe)
                         </a>
                     </div>
 
-                    <p class="text-xs text-gray-400 mb-6 font-semibold">After payment, send us a screenshot on WhatsApp to confirm your slot.</p>
+                    <p class="text-[10px] md:text-xs text-gray-400 mb-6 font-semibold">After payment, send us a screenshot on WhatsApp to confirm your slot.</p>
                     
-                    <button onclick="confirmWhatsApp('${payload.name}', '${payload.sport}', '${payload.date}', '${payload.timeSlot}', ${totalAmt})" class="w-full bg-[#25D366] text-white py-4 rounded-xl font-black text-lg hover:bg-[#1ebe5d] transition shadow-xl flex justify-center items-center gap-3">
-                        <i class="fa-brands fa-whatsapp text-2xl"></i> I have paid, send Screenshot
+                    <button onclick="confirmWhatsApp('${payload.name}', '${payload.sport}', '${payload.date}', '${payload.timeSlot}', ${totalAmt})" class="w-full bg-[#25D366] text-white py-3 md:py-4 rounded-xl font-black text-base hover:bg-[#1ebe5d] transition shadow-xl flex justify-center items-center gap-3">
+                        <i class="fa-brands fa-whatsapp text-xl md:text-2xl"></i> I Paid, send Screenshot
                     </button>
                 </div>
             `;
@@ -1434,7 +1397,6 @@
             generateSlots();
         }
 
-        // Helper function for the WhatsApp button inside the payment modal
         function confirmWhatsApp(name, sport, date, time, amt) {
             const waMsg = `*Payment Done & Slot Booked!* ✅%0A%0A*Name:* ${name}%0A*Sport:* ${sport}%0A*Date:* ${date}%0A*Time:* ${time}%0A*Amount:* ₹${amt}%0A%0A[Please attach your payment screenshot here]`;
             window.open(`https://wa.me/919156194847?text=${waMsg}`, '_blank');
@@ -1444,7 +1406,6 @@
         // ----------------------------------------------------
         // 4. TOURNAMENTS, GALLERY & CONTACT 
         // ----------------------------------------------------
-        
         function filterGallery(category) {
             const items = document.querySelectorAll('.gallery-item');
             items.forEach(item => {
@@ -1470,20 +1431,20 @@
                 data.tournaments.reverse().forEach(t => {
                     const encName = encodeURIComponent(t.name);
                     container.innerHTML += `
-                    <div class="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-3xl hover-lift shadow-2xl relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-orange/20 rounded-bl-full pointer-events-none"></div>
-                        <span class="bg-orange text-white text-xs font-black px-4 py-2 rounded-full uppercase tracking-widest shadow-lg">Live Registration</span>
-                        <h3 class="text-3xl font-black mt-6 mb-2">${t.name}</h3>
-                        <p class="text-gray-300 mb-6 font-bold"><i class="fa-solid fa-medal text-orange mr-2"></i>${t.sport} • ${t.prize} Prize</p>
-                        <p class="font-black text-white text-xl mb-8 border-t border-white/20 pt-4">Entry Fee: ₹${t.fee} / Team</p>
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 md:p-8 rounded-3xl hover-lift shadow-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-orange/20 rounded-bl-full pointer-events-none"></div>
+                        <span class="bg-orange text-white text-[10px] md:text-xs font-black px-3 py-1 md:px-4 md:py-2 rounded-full uppercase tracking-widest shadow-lg">Live</span>
+                        <h3 class="text-2xl md:text-3xl font-black mt-6 mb-2">${t.name}</h3>
+                        <p class="text-sm md:text-base text-gray-300 mb-6 font-bold"><i class="fa-solid fa-medal text-orange mr-2"></i>${t.sport} • ${t.prize} Prize</p>
+                        <p class="font-black text-white text-lg md:text-xl mb-6 border-t border-white/20 pt-4">Fee: ₹${t.fee} / Team</p>
                         
-                        <button data-name="${encName}" onclick="openTourneyModal(decodeURIComponent(this.dataset.name))" class="w-full bg-white text-navy font-black text-lg py-4 rounded-xl hover:bg-orange hover:text-white transition shadow-xl relative z-10">
-                            Register Team Now <i class="fa-solid fa-arrow-right ml-2"></i>
+                        <button data-name="${encName}" onclick="openTourneyModal(decodeURIComponent(this.dataset.name))" class="w-full bg-white text-navy font-black text-base md:text-lg py-3 md:py-4 rounded-xl hover:bg-orange hover:text-white transition shadow-xl relative z-10">
+                            Register Now <i class="fa-solid fa-arrow-right ml-2"></i>
                         </button>
                     </div>`;
                 });
             } else {
-                 container.innerHTML = `<div class="col-span-full text-center py-20"><p class="text-xl font-bold">No live tournaments right now. Check back soon!</p></div>`;
+                 container.innerHTML = `<div class="col-span-full text-center py-20"><p class="text-lg md:text-xl font-bold">No live tournaments right now. Check back soon!</p></div>`;
             }
         }
 
@@ -1505,13 +1466,10 @@
                 message: `Team Name: ${document.getElementById('tTeamName').value}` 
             };
             
-            // Send to DB via generic POST trick
             smartDbAction('addContact', payload);
-            
             alert("Redirecting to WhatsApp to complete your registration!");
             const waMsg = `*Tournament Registration!* 🏆%0A%0A*Tournament:* ${document.getElementById('tModName').innerText}%0A*Team Name:* ${document.getElementById('tTeamName').value}%0A*Captain:* ${document.getElementById('tCaptName').value}%0A*Phone:* ${document.getElementById('tPhone').value}%0A%0AI would like to submit my entry!`;
             window.open(`https://wa.me/919156194847?text=${waMsg}`, '_blank');
-            
             closeTourneyModal(); 
             e.target.reset();
         }
@@ -1520,14 +1478,13 @@
             e.preventDefault();
             const btn = document.getElementById('contactBtn'); 
             const orig = btn.innerHTML; 
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Sending...`;
             
             const name = document.getElementById('c_name').value;
             const phone = document.getElementById('c_phone').value;
             const subject = document.getElementById('c_subject').value;
             const msg = document.getElementById('c_message').value;
 
-            // Send via WhatsApp
             alert("Redirecting to WhatsApp to send your inquiry!");
             const waMsg = `Hello Rama Sports!%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Inquiry:* ${subject}%0A*Message:* ${msg}`;
             window.open(`https://wa.me/919156194847?text=${waMsg}`, '_blank');
@@ -1537,9 +1494,8 @@
         }
 
         // ----------------------------------------------------
-        // 5. THE ADMIN PANEL LOGIC
+        // 5. THE ADMIN PANEL LOGIC (Now Highly Mobile Optimized)
         // ----------------------------------------------------
-        
         function openAdmin() {
             if (prompt("Enter Secure Admin Password:") === "Rama@123") {
                 document.getElementById('admin-panel').style.display = 'flex'; 
@@ -1565,15 +1521,12 @@
         async function refreshAdminData() {
             const data = await smartDbAction('getData');
             
-            // FIXED: Math operations parse correctly
             let tr = 0, revWeb = 0, revMan = 0, revApp = 0, te = 0; 
-            
             data.expenses.forEach(e => te += Number(e.amount || 0));
             
             data.bookings.forEach(b => {
                 const p = Number(b.price || 0);
                 tr += p;
-                
                 if (b.source === 'Website') revWeb += p;
                 else if (b.source === 'Admin Manual') revMan += p;
                 else revApp += p; 
@@ -1581,7 +1534,6 @@
             
             document.getElementById('ad-tot-books').innerText = data.bookings.length;
             document.getElementById('ad-tot-rev').innerText = `₹${tr.toLocaleString()}`;
-            
             document.getElementById('rev-web').innerText = `₹${revWeb.toLocaleString()}`;
             document.getElementById('rev-man').innerText = `₹${revMan.toLocaleString()}`;
             document.getElementById('rev-app').innerText = `₹${revApp.toLocaleString()}`;
@@ -1589,7 +1541,7 @@
             const net = tr - te; 
             const netEl = document.getElementById('ad-net-profit');
             netEl.innerText = `₹${net.toLocaleString()}`; 
-            netEl.className = `text-5xl font-black mt-4 ${net < 0 ? 'text-red-500' : 'text-green-600'}`;
+            netEl.className = `text-4xl md:text-5xl font-black mt-2 md:mt-4 ${net < 0 ? 'text-red-500' : 'text-green-600'}`;
             
             const tbody = document.getElementById('adminTableBody'); 
             tbody.innerHTML = '';
@@ -1599,26 +1551,24 @@
                 eState.classList.remove('hidden'); 
             } else {
                 eState.classList.add('hidden');
-                
                 [...data.bookings].reverse().forEach(b => {
-                    let badge = `<span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-black">${b.source}</span>`;
-                    if (b.source === 'Website') badge = `<span class="bg-teal-100 text-teal-800 text-xs px-3 py-1 rounded-full font-black">${b.source}</span>`;
-                    if (b.source.includes('Admin')) badge = `<span class="bg-orange/20 text-orange-800 text-xs px-3 py-1 rounded-full font-black">${b.source}</span>`;
-                    if (b.source === 'MacroDroid SMS') badge = `<span class="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full font-black">${b.source}</span>`;
+                    let badge = `<span class="bg-blue-100 text-blue-800 text-[10px] md:text-xs px-2 md:px-3 py-1 rounded-full font-black">${b.source}</span>`;
+                    if (b.source === 'Website') badge = `<span class="bg-teal-100 text-teal-800 text-[10px] md:text-xs px-2 md:px-3 py-1 rounded-full font-black">${b.source}</span>`;
+                    if (b.source.includes('Admin')) badge = `<span class="bg-orange/20 text-orange-800 text-[10px] md:text-xs px-2 md:px-3 py-1 rounded-full font-black">${b.source}</span>`;
                     
                     tbody.innerHTML += `
                         <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
-                            <td class="p-6">
-                                <p class="font-black text-navy text-lg">${b.date}</p>
-                                <p class="text-xs font-bold text-gray-500 w-56 whitespace-normal mt-1 leading-snug break-words">${b.timeSlot}</p>
+                            <td class="p-4 md:p-6">
+                                <p class="font-black text-navy text-sm md:text-lg">${b.date}</p>
+                                <p class="text-[10px] md:text-xs font-bold text-gray-500 w-40 md:w-56 whitespace-normal mt-1 leading-snug break-words">${b.timeSlot}</p>
                             </td>
-                            <td class="p-6">
+                            <td class="p-4 md:p-6">
                                 <p class="font-black text-navy">${b.name}</p>
-                                <p class="text-xs font-bold text-gray-500 mt-1">${b.phone}</p>
+                                <p class="text-[10px] md:text-xs font-bold text-gray-500 mt-1">${b.phone}</p>
                             </td>
-                            <td class="p-6 font-bold text-gray-700">${b.sport}</td>
-                            <td class="p-6 font-black text-orange text-lg">₹${b.price}</td>
-                            <td class="p-6">${badge}</td>
+                            <td class="p-4 md:p-6 font-bold text-gray-700">${b.sport}</td>
+                            <td class="p-4 md:p-6 font-black text-orange text-base md:text-lg">₹${b.price}</td>
+                            <td class="p-4 md:p-6">${badge}</td>
                         </tr>
                     `;
                 });
@@ -1634,12 +1584,12 @@
                 expEmpty.classList.add('hidden');
                 [...data.expenses].reverse().forEach(e => {
                     eList.innerHTML += `
-                        <li class="flex justify-between items-center bg-gray-50 p-4 rounded-xl border border-gray-200 shadow-sm">
+                        <li class="flex justify-between items-center bg-gray-50 p-3 md:p-4 rounded-xl border border-gray-200 shadow-sm">
                             <div>
-                                <p class="font-black text-navy">${e.category}</p>
-                                <p class="text-xs font-bold text-gray-500 mt-1">${e.description}</p>
+                                <p class="font-black text-navy text-sm md:text-base">${e.category}</p>
+                                <p class="text-[10px] md:text-xs font-bold text-gray-500 mt-1">${e.description}</p>
                             </div>
-                            <span class="font-black text-red-500 text-lg">-₹${e.amount}</span>
+                            <span class="font-black text-red-500 text-base md:text-lg">-₹${e.amount}</span>
                         </li>
                     `;
                 });
