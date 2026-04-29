@@ -424,10 +424,17 @@
                                 <span class="mb-2">Selected Hours:</span>
                                 <span id="sumTime" class="text-orange text-xs md:text-sm space-y-2 block max-h-32 overflow-y-auto pr-2 custom-scrollbar">None</span>
                             </div>
-                            <div class="flex justify-between text-xl md:text-2xl pt-2 mt-2">
-                                <span>Total Price:</span> 
-                                <span id="sumPrice" class="text-orange font-black">₹0</span>
+                            
+                            <!-- Updated Pricing Breakdown (50% Advance) -->
+                            <div class="flex justify-between text-lg md:text-xl pt-2 mt-2">
+                                <span>Total Value:</span> 
+                                <span id="sumPrice" class="text-gray-400 font-bold line-through">₹0</span>
                             </div>
+                            <div class="flex justify-between text-xl md:text-2xl pt-2 mt-2 border-t border-gray-200">
+                                <span>Advance (50%):</span> 
+                                <span id="sumAdvance" class="text-orange font-black">₹0</span>
+                            </div>
+                            <p class="text-[10px] md:text-xs text-teal mt-1 text-right font-bold">* Pay the remaining 50% at the venue.</p>
                         </div>
 
                         <!-- Customer Details Form -->
@@ -981,7 +988,7 @@
                                     <th class="p-4 md:p-6 font-bold uppercase tracking-wider">Date & Time</th>
                                     <th class="p-4 md:p-6 font-bold uppercase tracking-wider">Customer Info</th>
                                     <th class="p-4 md:p-6 font-bold uppercase tracking-wider">Sport</th>
-                                    <th class="p-4 md:p-6 font-bold uppercase tracking-wider">Price Paid</th>
+                                    <th class="p-4 md:p-6 font-bold uppercase tracking-wider">Total Value</th>
                                     <th class="p-4 md:p-6 font-bold uppercase tracking-wider">Source</th>
                                 </tr>
                             </thead>
@@ -1153,7 +1160,7 @@
                     <input type="text" id="mTime" placeholder="e.g. 06:00 AM - 08:00 AM" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl focus:border-orange outline-none font-bold text-sm md:text-base" required>
                 </div>
                 <div>
-                    <label class="block text-xs md:text-sm font-bold text-navy mb-1 uppercase tracking-widest">Amount Collected (₹)</label>
+                    <label class="block text-xs md:text-sm font-bold text-navy mb-1 uppercase tracking-widest">Total Slot Value (₹)</label>
                     <input type="number" id="mPrice" class="w-full bg-gray-50 border-2 border-gray-200 p-3 md:p-4 rounded-xl focus:border-orange outline-none font-bold text-sm md:text-base" required>
                 </div>
                 <div>
@@ -1423,10 +1430,12 @@
         function updateSummaryUI() {
             const timeContainer = document.getElementById('sumTime'); 
             const priceContainer = document.getElementById('sumPrice');
+            const advanceContainer = document.getElementById('sumAdvance');
             
             if (selectedSlotsArray.length === 0) { 
                 timeContainer.innerHTML = "None"; 
                 priceContainer.innerHTML = "₹0"; 
+                advanceContainer.innerHTML = "₹0"; 
                 return; 
             }
             
@@ -1441,9 +1450,10 @@
             
             timeContainer.innerHTML = html; 
             priceContainer.innerHTML = `₹${tot}`;
+            advanceContainer.innerHTML = `₹${Math.round(tot / 2)}`;
         }
 
-        // ---------- DELAYED UPI PAYMENT LOGIC & WARNING MESSAGE ----------
+        // ---------- DELAYED UPI PAYMENT LOGIC & 50% ADVANCE WARNING ----------
         async function submitBooking(e) {
             e.preventDefault();
             if (selectedSlotsArray.length === 0) return alert('Please select at least one hourly slot to book.');
@@ -1459,8 +1469,11 @@
 
             const combinedTimes = selectedSlotsArray.map(s => s.time).join(', ');
             const totalAmt = selectedSlotsArray.reduce((acc, curr) => acc + curr.price, 0);
+            
+            // Calculate 50% Advance
+            const advanceAmt = Math.round(totalAmt / 2);
 
-            // STORE TEMPORARILY. DO NOT PUSH TO DB YET.
+            // STORE TEMPORARILY. DO NOT PUSH TO DB YET. We store full price so admin sees Total Gross Value.
             pendingBookingPayload = { 
                 type: 'booking', 
                 name: document.getElementById('bookName').value, 
@@ -1468,12 +1481,12 @@
                 sport: currentSport, 
                 date: selectedDate, 
                 timeSlot: combinedTimes, 
-                price: totalAmt, 
+                price: totalAmt, // DB uses full price for financial calculations
                 source: 'Website' 
             };
 
-            // Generate UPI URL
-            const upiString = `upi://pay?pa=${merchantUpiId}&pn=${encodeURIComponent(merchantName)}&am=${totalAmt}&cu=INR&tn=Turf Booking ${selectedDate}`;
+            // Generate UPI URL FOR ADVANCE AMOUNT ONLY
+            const upiString = `upi://pay?pa=${merchantUpiId}&pn=${encodeURIComponent(merchantName)}&am=${advanceAmt}&cu=INR&tn=Turf Booking ${selectedDate} Advance`;
 
             // Generate QR Code Image URL
             const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}`;
@@ -1487,7 +1500,8 @@
                     <button onclick="document.getElementById('upiPaymentModal').remove()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl"><i class="fa-solid fa-times"></i></button>
                     
                     <h2 class="text-2xl md:text-3xl font-black text-navy mb-2 mt-4 md:mt-0">Complete Payment</h2>
-                    <p class="text-gray-500 font-bold mb-4 md:mb-6">Total Amount: <span class="text-orange text-lg md:text-xl">₹${totalAmt}</span></p>
+                    <p class="text-gray-500 font-bold mb-1">Total Slot Value: ₹${totalAmt}</p>
+                    <p class="text-navy font-black mb-4 md:mb-6 text-lg md:text-xl border-b-2 border-gray-100 pb-4">Advance to Pay Now (50%): <br><span class="text-orange text-3xl md:text-4xl mt-2 block">₹${advanceAmt}</span></p>
                     
                     <!-- Desktop: Scan QR -->
                     <div class="hidden md:block mb-4 md:mb-6">
@@ -1506,7 +1520,7 @@
                     <div class="bg-red-50 border-2 border-red-200 rounded-xl p-4 mb-4 md:mb-6 text-left shadow-sm">
                         <p class="text-xs md:text-sm text-red-600 font-bold leading-relaxed">
                             <i class="fa-solid fa-circle-exclamation mr-1 text-red-500"></i>
-                            <strong>IMPORTANT:</strong> Your booking is currently on hold. <u>It will ONLY be confirmed AFTER you share the successful payment screenshot</u> with us on WhatsApp.
+                            <strong>IMPORTANT:</strong> Your booking is currently on hold. <u>It will ONLY be confirmed AFTER you share the successful payment screenshot</u> of the 50% advance with us on WhatsApp.
                         </p>
                     </div>
                     
@@ -1531,7 +1545,10 @@
             await smartDbAction('addBooking', pendingBookingPayload);
 
             // 2. Open WhatsApp
-            const waMsg = `*Payment Done! Confirm My Slot* ✅%0A%0A*Name:* ${pendingBookingPayload.name}%0A*Sport:* ${pendingBookingPayload.sport}%0A*Date:* ${pendingBookingPayload.date}%0A*Time:* ${pendingBookingPayload.timeSlot}%0A*Amount:* ₹${pendingBookingPayload.price}%0A%0A[Please attach your payment screenshot here]`;
+            const total = pendingBookingPayload.price;
+            const advance = Math.round(total / 2);
+            
+            const waMsg = `*Advance Payment Done! Confirm My Slot* ✅%0A%0A*Name:* ${pendingBookingPayload.name}%0A*Sport:* ${pendingBookingPayload.sport}%0A*Date:* ${pendingBookingPayload.date}%0A*Time:* ${pendingBookingPayload.timeSlot}%0A%0A*Total Slot Value:* ₹${total}%0A*Advance Paid:* ₹${advance}%0A*Pending (Pay at Venue):* ₹${total - advance}%0A%0A[Please attach your payment screenshot here]`;
             window.open(`https://wa.me/919156194847?text=${waMsg}`, '_blank');
             
             // 3. Cleanup UI
