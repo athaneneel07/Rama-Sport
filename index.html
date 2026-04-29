@@ -104,7 +104,6 @@
             width: 100%;
             position: relative;
         }
-        /* Fade edges for slick look */
         .marquee-wrapper::before, .marquee-wrapper::after {
             content: "";
             position: absolute;
@@ -132,7 +131,7 @@
         .marquee-content {
             display: flex;
             gap: 1.5rem;
-            padding-right: 1.5rem; /* Match gap for seamless loop */
+            padding-right: 1.5rem; 
         }
         .review-card {
             width: 320px;
@@ -1200,7 +1199,7 @@
         let currentSport = 'Basketball'; 
         let selectedDate = ''; 
         let selectedSlotsArray = [];
-        let pendingBookingPayload = null; // Stores booking temporarily until WhatsApp click
+        let pendingBookingPayload = null; 
 
         async function smartDbAction(action, payload = null) {
             const isOffline = GOOGLE_SCRIPT_URL.includes('YOUR_GOOGLE');
@@ -1208,43 +1207,56 @@
             if (action === 'getData') {
                 if(isOffline) return { bookings: localBookings, expenses: localExpenses, tournaments: localTournaments };
                 try { 
-                    const r = await fetch(GOOGLE_SCRIPT_URL + "?action=getAdminData"); 
+                    // BUG FIX: Added a cache-buster (&t=...) so the browser doesn't load old/stale data.
+                    const url = GOOGLE_SCRIPT_URL + "?action=getAdminData&t=" + new Date().getTime();
+                    
+                    // BUG FIX: Added 'redirect: follow' because GAS redirects GET requests.
+                    const r = await fetch(url, { method: 'GET', redirect: 'follow' }); 
+                    
+                    if (!r.ok) throw new Error("Network response was not ok");
                     const d = await r.json(); 
                     
-                    const allBookings = [...localBookings, ...(d.bookings || [])];
+                    // Safely merge live Database data with any unsynced local data
+                    const allBookings = [...(d.bookings || []), ...localBookings];
                     const uniqueBookings = Array.from(new Map(allBookings.map(b => [b.date + b.timeSlot + b.sport, b])).values());
                     
-                    const allExpenses = [...localExpenses, ...(d.expenses || [])];
+                    const allExpenses = [...(d.expenses || []), ...localExpenses];
                     const uniqueExpenses = Array.from(new Map(allExpenses.map(e => [e.timestamp + e.amount, e])).values());
                     
                     return { bookings: uniqueBookings, expenses: uniqueExpenses, tournaments: d.tournaments || localTournaments }; 
                 } catch(e) { 
+                    console.warn("Live Sync Failed. Falling back to Local Storage.", e);
                     return { bookings: localBookings, expenses: localExpenses, tournaments: localTournaments }; 
                 }
             } else {
+                // Update Local Storage First
+                if (payload) payload.timestamp = payload.timestamp || new Date().toLocaleString();
+                
                 if (action === 'addBooking') {
-                    const b = {...payload, timestamp: new Date().toLocaleString()};
-                    localBookings.push(b); 
+                    localBookings.push(payload); 
                     localStorage.setItem('ramaBookings', JSON.stringify(localBookings));
-                }
-                if (action === 'addExpense') {
-                    const e = {...payload, timestamp: new Date().toLocaleString()};
-                    localExpenses.push(e); 
+                } else if (action === 'addExpense') {
+                    localExpenses.push(payload); 
                     localStorage.setItem('ramaExpenses', JSON.stringify(localExpenses));
-                }
-                if (action === 'addTourney') {
+                } else if (action === 'addTourney') {
+                    payload.type = 'tournament_add'; // Ensure Google Script categorizes correctly
                     localTournaments.push(payload); 
                     localStorage.setItem('ramaTournaments', JSON.stringify(localTournaments));
                 }
 
                 if(!isOffline) {
                     try { 
+                        // BUG FIX: Standardized headers and added 'redirect: follow'. 
+                        // This prevents strict CORS (Cross-Origin) blocks from breaking the POST save to Google Sheets.
                         await fetch(GOOGLE_SCRIPT_URL, { 
                             method: 'POST', 
                             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                            body: JSON.stringify(action === 'addTourney' ? {type: 'tournament_add', ...payload} : payload) 
+                            body: JSON.stringify(payload),
+                            redirect: 'follow'
                         }); 
-                    } catch(e){ console.error("Sync Data Note:", e); }
+                    } catch(e){ 
+                        console.warn("Live Database Push Failed. Data saved locally.", e); 
+                    }
                 }
             }
         }
@@ -1481,7 +1493,7 @@
                 sport: currentSport, 
                 date: selectedDate, 
                 timeSlot: combinedTimes, 
-                price: totalAmt, // DB uses full price for financial calculations
+                price: totalAmt, 
                 source: 'Website' 
             };
 
@@ -1641,6 +1653,9 @@
             const phone = document.getElementById('c_phone').value;
             const subject = document.getElementById('c_subject').value;
             const msg = document.getElementById('c_message').value;
+            
+            // Add inquiry logic pass-through to ensure it logs if admin wants
+            smartDbAction('addContact', { type: 'contact', name, phone, subject, message: msg });
 
             alert("Redirecting to WhatsApp to send your inquiry!");
             const waMsg = `Hello Rama Sports!%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Inquiry:* ${subject}%0A*Message:* ${msg}`;
@@ -1840,7 +1855,7 @@
         function exportToCSV() {
             if (localBookings.length === 0) return alert("Database is empty. No data to export.");
             
-            let csv = 'Timestamp,Customer Name,Phone,Sport,Date,Time Slot,Price,Source\n';
+            let csv = 'Timestamp,Customer Name,Phone,Sport,Date,Time Slot,Total Value,Source\n';
             localBookings.forEach(b => {
                 const row = [b.timestamp || '', b.name, b.phone, b.sport, b.date, b.timeSlot, b.price, b.source].map(val => `"${val}"`).join(',');
                 csv += row + '\n';
