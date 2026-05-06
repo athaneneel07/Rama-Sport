@@ -1088,26 +1088,6 @@
                     </form>
                 </div>
 
-                <!-- MACRODROID APP INSTRUCTIONS RESTORED -->
-                <div class="bg-blue-50 p-6 md:p-8 rounded-3xl shadow-lg border border-blue-200 mb-8 md:mb-10">
-                    <h3 class="font-black text-xl md:text-2xl text-blue-800 mb-4">
-                        <i class="fa-solid fa-mobile-screen mr-2 md:mr-3"></i>Connect Playo/Khelomore SMS
-                    </h3>
-                    <p class="text-blue-900 mb-4 font-medium leading-relaxed text-sm md:text-base">
-                        Because 3rd party booking apps send random text formats, the system cannot safely guess the date/time automatically. 
-                        Follow these steps to send the SMS to your dashboard, and then you can click <b>"Manual Booking"</b> to officially block the slot.
-                    </p>
-                    <ol class="list-decimal pl-5 space-y-2 text-blue-900 font-bold text-xs md:text-sm">
-                        <li>Download the <b>MacroDroid</b> app on your Android phone.</li>
-                        <li>Create a new Macro. Set <b>Trigger</b> to "SMS Received" (Select the Playo/Khelomore sender name).</li>
-                        <li>Set <b>Action</b> to "HTTP Request". Method: POST.</li>
-                        <li>URL: Paste your Google Script URL.</li>
-                        <li>Content Type: <code>application/x-www-form-urlencoded</code></li>
-                        <li>Add Parameters: <code>type=macrodroid</code> and <code>sms_text=[SMS Message Content Text]</code></li>
-                        <li>Now, whenever an SMS comes, it will show up in the Bookings table for you to review and block manually!</li>
-                    </ol>
-                </div>
-
                 <!-- Blackout Slot Manual Block -->
                 <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-red-200 mb-8 md:mb-10">
                     <h3 class="font-black text-xl md:text-2xl text-red-600 mb-4 md:mb-6 border-b-2 border-red-100 pb-3 md:pb-4">
@@ -1186,7 +1166,6 @@
         // ----------------------------------------------------
         // 1. SMART DB ENGINE (Handles Local & Google Sheets)
         // ----------------------------------------------------
-        // PLEASE PASTE YOUR DEPLOYED WEB APP URL HERE:
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKd7eGDVnpVYP6QDaDy_nRtqW9aQAYhmZNZSlp41ecsS7VIb85aq6CHq5eERhOa4JX3Q/exec'; 
 
         // Local Storage Init
@@ -1207,16 +1186,12 @@
             if (action === 'getData') {
                 if(isOffline) return { bookings: localBookings, expenses: localExpenses, tournaments: localTournaments };
                 try { 
-                    // BUG FIX: Added a cache-buster (&t=...) so the browser doesn't load old/stale data.
                     const url = GOOGLE_SCRIPT_URL + "?action=getAdminData&t=" + new Date().getTime();
-                    
-                    // BUG FIX: Added 'redirect: follow' because GAS redirects GET requests.
                     const r = await fetch(url, { method: 'GET', redirect: 'follow' }); 
                     
                     if (!r.ok) throw new Error("Network response was not ok");
                     const d = await r.json(); 
                     
-                    // Safely merge live Database data with any unsynced local data
                     const allBookings = [...(d.bookings || []), ...localBookings];
                     const uniqueBookings = Array.from(new Map(allBookings.map(b => [b.date + b.timeSlot + b.sport, b])).values());
                     
@@ -1229,7 +1204,6 @@
                     return { bookings: localBookings, expenses: localExpenses, tournaments: localTournaments }; 
                 }
             } else {
-                // Update Local Storage First
                 if (payload) payload.timestamp = payload.timestamp || new Date().toLocaleString();
                 
                 if (action === 'addBooking') {
@@ -1239,15 +1213,13 @@
                     localExpenses.push(payload); 
                     localStorage.setItem('ramaExpenses', JSON.stringify(localExpenses));
                 } else if (action === 'addTourney') {
-                    payload.type = 'tournament_add'; // Ensure Google Script categorizes correctly
+                    payload.type = 'tournament_add';
                     localTournaments.push(payload); 
                     localStorage.setItem('ramaTournaments', JSON.stringify(localTournaments));
                 }
 
                 if(!isOffline) {
                     try { 
-                        // BUG FIX: Standardized headers and added 'redirect: follow'. 
-                        // This prevents strict CORS (Cross-Origin) blocks from breaking the POST save to Google Sheets.
                         await fetch(GOOGLE_SCRIPT_URL, { 
                             method: 'POST', 
                             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -1265,7 +1237,6 @@
         // 2. UI INITIALIZATION & ANIMATIONS (GSAP)
         // ----------------------------------------------------
         window.addEventListener('load', () => {
-            // Cricket Six Animation GSAP Sequence
             let tl = gsap.timeline({ onComplete: () => {
                 setTimeout(() => { 
                     document.getElementById('preloader').style.opacity = '0'; 
@@ -1274,9 +1245,9 @@
                 }, 600);
             }});
             
-            tl.to("#p-bat", { rotation: -60, duration: 0.3, ease: "power2.in" }) // Swing
-              .to("#p-ball", { x: 300, y: -200, scale: 0.3, duration: 0.7, ease: "power1.out" }, "-=0.1") // Hit boundary
-              .to("#p-text", { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" }, "-=0.4"); // Text reveal
+            tl.to("#p-bat", { rotation: -60, duration: 0.3, ease: "power2.in" })
+              .to("#p-ball", { x: 300, y: -200, scale: 0.3, duration: 0.7, ease: "power1.out" }, "-=0.1")
+              .to("#p-text", { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" }, "-=0.4");
 
             const todayStr = new Date().toISOString().split("T")[0];
             document.getElementById('bookDate').min = todayStr; 
@@ -1376,7 +1347,6 @@
             
             const container = document.getElementById('slotContainer');
             
-            // Dynamic Loading Animation based on Sport
             let loadingIcon = 'fa-basketball';
             let iconColor = 'text-orange';
             if (currentSport.includes('Cricket')) { loadingIcon = 'fa-baseball-bat-ball'; iconColor = 'text-red-500'; }
@@ -1465,12 +1435,10 @@
             advanceContainer.innerHTML = `₹${Math.round(tot / 2)}`;
         }
 
-        // ---------- DELAYED UPI PAYMENT LOGIC & 50% ADVANCE WARNING ----------
         async function submitBooking(e) {
             e.preventDefault();
             if (selectedSlotsArray.length === 0) return alert('Please select at least one hourly slot to book.');
 
-            // YOUR BUSINESS UPI ID
             const merchantUpiId = "9422231321@fam"; 
             const merchantName = "Rama Sports";
 
@@ -1481,11 +1449,8 @@
 
             const combinedTimes = selectedSlotsArray.map(s => s.time).join(', ');
             const totalAmt = selectedSlotsArray.reduce((acc, curr) => acc + curr.price, 0);
-            
-            // Calculate 50% Advance
             const advanceAmt = Math.round(totalAmt / 2);
 
-            // STORE TEMPORARILY. DO NOT PUSH TO DB YET. We store full price so admin sees Total Gross Value.
             pendingBookingPayload = { 
                 type: 'booking', 
                 name: document.getElementById('bookName').value, 
@@ -1497,78 +1462,53 @@
                 source: 'Website' 
             };
 
-            // Generate UPI URL FOR ADVANCE AMOUNT ONLY
             const upiString = `upi://pay?pa=${merchantUpiId}&pn=${encodeURIComponent(merchantName)}&am=${advanceAmt}&cu=INR&tn=Turf Booking ${selectedDate} Advance`;
-
-            // Generate QR Code Image URL
             const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}`;
 
-            // Create a Payment Modal on the fly
             const paymentModal = document.createElement('div');
             paymentModal.id = "upiPaymentModal";
             paymentModal.className = "fixed inset-0 bg-navy/95 z-[9999] flex justify-center items-center backdrop-blur-sm p-4 safe-pb";
             paymentModal.innerHTML = `
                 <div class="bg-white rounded-3xl p-6 md:p-8 w-[95%] md:max-w-md text-center shadow-2xl relative border-t-8 border-orange flex flex-col max-h-[90vh] overflow-y-auto custom-scrollbar">
                     <button onclick="document.getElementById('upiPaymentModal').remove()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl"><i class="fa-solid fa-times"></i></button>
-                    
                     <h2 class="text-2xl md:text-3xl font-black text-navy mb-2 mt-4 md:mt-0">Complete Payment</h2>
                     <p class="text-gray-500 font-bold mb-1">Total Slot Value: ₹${totalAmt}</p>
                     <p class="text-navy font-black mb-4 md:mb-6 text-lg md:text-xl border-b-2 border-gray-100 pb-4">Advance to Pay Now (50%): <br><span class="text-orange text-3xl md:text-4xl mt-2 block">₹${advanceAmt}</span></p>
-                    
-                    <!-- Desktop: Scan QR -->
                     <div class="hidden md:block mb-4 md:mb-6">
                         <p class="text-xs md:text-sm font-bold text-navy mb-3 uppercase tracking-widest">Scan to Pay via any UPI App</p>
                         <img src="${qrImageUrl}" alt="UPI QR Code" class="mx-auto border-4 border-gray-100 rounded-xl shadow-sm">
                     </div>
-
-                    <!-- Mobile: Direct App Open -->
                     <div class="block md:hidden mb-4 md:mb-6">
                         <a href="${upiString}" class="block w-full bg-navy text-white py-4 rounded-xl font-black text-base hover:bg-orange transition shadow-xl flex justify-center items-center gap-3">
                             <i class="fa-solid fa-mobile-screen"></i> Pay via App (GPay/PhonePe)
                         </a>
                     </div>
-
-                    <!-- WARNING MESSAGE -->
                     <div class="bg-red-50 border-2 border-red-200 rounded-xl p-4 mb-4 md:mb-6 text-left shadow-sm">
                         <p class="text-xs md:text-sm text-red-600 font-bold leading-relaxed">
                             <i class="fa-solid fa-circle-exclamation mr-1 text-red-500"></i>
                             <strong>IMPORTANT:</strong> Your booking is currently on hold. <u>It will ONLY be confirmed AFTER you share the successful payment screenshot</u> of the 50% advance with us on WhatsApp.
                         </p>
                     </div>
-                    
-                    <!-- CONFIRMATION BUTTON PUSHES TO DB -->
                     <button onclick="confirmWhatsApp()" class="w-full bg-[#25D366] text-white py-3 md:py-4 rounded-xl font-black text-base hover:bg-[#1ebe5d] transition shadow-xl flex justify-center items-center gap-3 mt-auto">
                         <i class="fa-brands fa-whatsapp text-xl md:text-2xl"></i> I Paid, Send Screenshot
                     </button>
                 </div>
             `;
-
             document.body.appendChild(paymentModal);
-
-            // Revert button state
             btn.innerHTML = orig; 
             btn.disabled = false; 
         }
 
         async function confirmWhatsApp() {
             if (!pendingBookingPayload) return;
-
-            // 1. Send to Database NOW
             await smartDbAction('addBooking', pendingBookingPayload);
-
-            // 2. Open WhatsApp
             const total = pendingBookingPayload.price;
             const advance = Math.round(total / 2);
-            
             const waMsg = `*Advance Payment Done! Confirm My Slot* ✅%0A%0A*Name:* ${pendingBookingPayload.name}%0A*Sport:* ${pendingBookingPayload.sport}%0A*Date:* ${pendingBookingPayload.date}%0A*Time:* ${pendingBookingPayload.timeSlot}%0A%0A*Total Slot Value:* ₹${total}%0A*Advance Paid:* ₹${advance}%0A*Pending (Pay at Venue):* ₹${total - advance}%0A%0A[Please attach your payment screenshot here]`;
             window.open(`https://wa.me/919156194847?text=${waMsg}`, '_blank');
-            
-            // 3. Cleanup UI
             document.getElementById('upiPaymentModal').remove();
             document.getElementById('bookingForm').reset();
-            generateSlots(); // Refreshes and greys out the newly booked slots
-            
-            // Clear Payload
+            generateSlots(); 
             pendingBookingPayload = null;
         }
 
@@ -1606,7 +1546,6 @@
                         <h3 class="text-2xl md:text-3xl font-black mt-6 mb-2">${t.name}</h3>
                         <p class="text-sm md:text-base text-gray-300 mb-6 font-bold"><i class="fa-solid fa-medal text-orange mr-2"></i>${t.sport} • ${t.prize} Prize</p>
                         <p class="font-black text-white text-lg md:text-xl mb-6 border-t border-white/20 pt-4">Fee: ₹${t.fee} / Team</p>
-                        
                         <button data-name="${encName}" onclick="openTourneyModal(decodeURIComponent(this.dataset.name))" class="w-full bg-white text-navy font-black text-base md:text-lg py-3 md:py-4 rounded-xl hover:bg-orange hover:text-white transition shadow-xl relative z-10">
                             Register Now <i class="fa-solid fa-arrow-right ml-2"></i>
                         </button>
@@ -1634,7 +1573,6 @@
                 subject: `[Tournament Entry] ${document.getElementById('tModName').innerText}`, 
                 message: `Team Name: ${document.getElementById('tTeamName').value}` 
             };
-            
             smartDbAction('addContact', payload);
             alert("Redirecting to WhatsApp to complete your registration!");
             const waMsg = `*Tournament Registration!* 🏆%0A%0A*Tournament:* ${document.getElementById('tModName').innerText}%0A*Team Name:* ${document.getElementById('tTeamName').value}%0A*Captain:* ${document.getElementById('tCaptName').value}%0A*Phone:* ${document.getElementById('tPhone').value}%0A%0AI would like to submit my entry!`;
@@ -1648,19 +1586,14 @@
             const btn = document.getElementById('contactBtn'); 
             const orig = btn.innerHTML; 
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Sending...`;
-            
             const name = document.getElementById('c_name').value;
             const phone = document.getElementById('c_phone').value;
             const subject = document.getElementById('c_subject').value;
             const msg = document.getElementById('c_message').value;
-            
-            // Add inquiry logic pass-through to ensure it logs if admin wants
             smartDbAction('addContact', { type: 'contact', name, phone, subject, message: msg });
-
             alert("Redirecting to WhatsApp to send your inquiry!");
             const waMsg = `Hello Rama Sports!%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Inquiry:* ${subject}%0A*Message:* ${msg}`;
             window.open(`https://wa.me/919156194847?text=${waMsg}`, '_blank');
-            
             e.target.reset(); 
             btn.innerHTML = orig;
         }
@@ -1686,13 +1619,10 @@
         function switchAdminTab(tabId) {
             document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.admin-nav-item').forEach(el => el.classList.remove('active', 'bg-orange', 'text-white'));
-            
-            // Mobile Tabs Colors Update
             document.querySelectorAll('.mobile-admin-tab').forEach(el => {
                 el.classList.remove('text-white');
                 el.classList.add('text-gray-400');
             });
-            
             document.getElementById(`content-${tabId}`).classList.add('active'); 
             document.getElementById(`tab-${tabId}`).classList.add('active', 'bg-orange', 'text-white');
             document.getElementById(`m-tab-${tabId}`).classList.add('text-white');
@@ -1701,46 +1631,35 @@
 
         async function refreshAdminData() {
             const data = await smartDbAction('getData');
-            
             let tr = 0, revWeb = 0, revMan = 0, revApp = 0, te = 0; 
-            
             data.expenses.forEach(e => te += Number(e.amount || 0));
-            
             data.bookings.forEach(b => {
                 const p = Number(b.price || 0);
                 tr += p;
-                
                 if (b.source === 'Website') revWeb += p;
                 else if (b.source === 'Admin Manual') revMan += p;
                 else revApp += p; 
             });
-            
             document.getElementById('ad-tot-books').innerText = data.bookings.length;
             document.getElementById('ad-tot-rev').innerText = `₹${tr.toLocaleString()}`;
-            
             document.getElementById('rev-web').innerText = `₹${revWeb.toLocaleString()}`;
             document.getElementById('rev-man').innerText = `₹${revMan.toLocaleString()}`;
             document.getElementById('rev-app').innerText = `₹${revApp.toLocaleString()}`;
-            
             const net = tr - te; 
             const netEl = document.getElementById('ad-net-profit');
             netEl.innerText = `₹${net.toLocaleString()}`; 
             netEl.className = `text-4xl md:text-5xl font-black mt-2 md:mt-4 ${net < 0 ? 'text-red-500' : 'text-green-600'}`;
-            
             const tbody = document.getElementById('adminTableBody'); 
             tbody.innerHTML = '';
             const eState = document.getElementById('adminTableEmpty');
-            
             if (data.bookings.length === 0) {
                 eState.classList.remove('hidden'); 
             } else {
                 eState.classList.add('hidden');
-                
                 [...data.bookings].reverse().forEach(b => {
                     let badge = `<span class="bg-blue-100 text-blue-800 text-[10px] md:text-xs px-2 md:px-3 py-1 rounded-full font-black">${b.source}</span>`;
                     if (b.source === 'Website') badge = `<span class="bg-teal-100 text-teal-800 text-[10px] md:text-xs px-2 md:px-3 py-1 rounded-full font-black">${b.source}</span>`;
                     if (b.source.includes('Admin')) badge = `<span class="bg-orange/20 text-orange-800 text-[10px] md:text-xs px-2 md:px-3 py-1 rounded-full font-black">${b.source}</span>`;
-                    
                     tbody.innerHTML += `
                         <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
                             <td class="p-4 md:p-6">
@@ -1754,15 +1673,12 @@
                             <td class="p-4 md:p-6 font-bold text-gray-700">${b.sport}</td>
                             <td class="p-4 md:p-6 font-black text-orange text-base md:text-lg">₹${b.price}</td>
                             <td class="p-4 md:p-6">${badge}</td>
-                        </tr>
-                    `;
+                        </tr>`;
                 });
             }
-
             const eList = document.getElementById('expenseList'); 
             eList.innerHTML = '';
             const expEmpty = document.getElementById('expenseEmpty');
-            
             if (data.expenses.length === 0) {
                 expEmpty.classList.remove('hidden');
             } else {
@@ -1775,8 +1691,7 @@
                                 <p class="text-[10px] md:text-xs font-bold text-gray-500 mt-1">${e.description}</p>
                             </div>
                             <span class="font-black text-red-500 text-base md:text-lg">-₹${e.amount}</span>
-                        </li>
-                    `;
+                        </li>`;
                 });
             }
         }
@@ -1793,12 +1708,10 @@
                 price: document.getElementById('mPrice').value, 
                 source: document.getElementById('mSource').value
             };
-            
             await smartDbAction('addBooking', payload);
             document.getElementById('manualBookModal').style.display='none'; 
             e.target.reset(); 
             refreshAdminData();
-            
             if(selectedDate === payload.date && currentSport === payload.sport) generateSlots();
             alert("Manual Booking added successfully!");
         }
@@ -1811,7 +1724,6 @@
                 amount: document.getElementById('expAmount').value, 
                 description: document.getElementById('expDesc').value 
             };
-            
             await smartDbAction('addExpense', payload); 
             e.target.reset(); 
             refreshAdminData();
@@ -1826,7 +1738,6 @@
                 prize: document.getElementById('cmsTPrize').value, 
                 fee: document.getElementById('cmsTFee').value 
             });
-            
             alert("Tournament Published Successfully!"); 
             e.target.reset(); 
             renderFrontendTournaments(); 
@@ -1845,7 +1756,6 @@
                 price: 0, 
                 source: 'Admin Block' 
             };
-            
             await smartDbAction('addBooking', payload); 
             e.target.reset(); 
             refreshAdminData(); 
@@ -1854,13 +1764,11 @@
 
         function exportToCSV() {
             if (localBookings.length === 0) return alert("Database is empty. No data to export.");
-            
             let csv = 'Timestamp,Customer Name,Phone,Sport,Date,Time Slot,Total Value,Source\n';
             localBookings.forEach(b => {
                 const row = [b.timestamp || '', b.name, b.phone, b.sport, b.date, b.timeSlot, b.price, b.source].map(val => `"${val}"`).join(',');
                 csv += row + '\n';
             });
-            
             const blob = new Blob([csv], { type: 'text/csv' }); 
             const url = window.URL.createObjectURL(blob); 
             const a = document.createElement('a'); 
